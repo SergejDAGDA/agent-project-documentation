@@ -1,7 +1,7 @@
 {
   "name": "project-documentation",
-  "version": "0.1.0",
-  "description": "Repository documentation and reusable knowledge extraction with presentation and internal documentation layers.",
+  "version": "0.2.0",
+  "description": "Repository documentation, project reconciliation, continuation diagnostics, contamination checks, and reusable knowledge extraction.",
   "author": {
     "name": "Sergej DAGDA",
     "url": "https://github.com/SergejDAGDA"
