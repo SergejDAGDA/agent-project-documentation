@@ -1,5 +1,7 @@
 # Project Documentation
 
+[Русская версия](README.ru.md)
+
 A reusable Agent Skill for turning source repositories into structured, maintainable, and reusable project knowledge.
 
 The skill creates and maintains two documentation levels:
