@@ -39,6 +39,14 @@ No second copy of the skill instructions is maintained for Claude Code.
 
 The agent performs semantic repository analysis and documentation authoring.
 
-Deterministic scripts provide repository inventory and lightweight structural checks.
+Deterministic scripts provide repository inventory, lightweight structural checks, and conservative repository diagnostic signals.
 
 This division avoids pretending that a generic static parser can understand every project's product semantics while still reducing repetitive filesystem inspection and simple validation work.
+
+## Internal analysis boundaries
+
+Tracked `docs/` contains durable project knowledge.
+
+Temporary continuation and contamination findings default to `.project-documentation/`, which is ignored by version control. This keeps potentially sensitive or noisy diagnostics separate from public and durable documentation.
+
+Reconciliation may create tracked `docs/evolution/` material when credible planning evidence exists and the result is useful for maintainers.
