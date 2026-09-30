@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Documentation"
+  short_description: "Extract reusable project knowledge and maintain two-level repository docs"
+  default_prompt: "Audit this repository and create or update its presentation and internal documentation with reusable capability knowledge."

@@ -1,0 +1,18 @@
+{
+  "name": "project-documentation",
+  "version": "0.1.0",
+  "description": "Repository documentation and reusable knowledge extraction with presentation and internal documentation layers.",
+  "author": {
+    "name": "Sergej DAGDA",
+    "url": "https://github.com/SergejDAGDA"
+  },
+  "homepage": "https://github.com/SergejDAGDA/agent-project-documentation",
+  "repository": "https://github.com/SergejDAGDA/agent-project-documentation",
+  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "repository",
+    "knowledge-extraction",
+    "agent-skills"
+  ]
+}

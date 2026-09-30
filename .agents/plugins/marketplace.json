@@ -1,0 +1,21 @@
+{
+  "name": "agent-project-documentation",
+  "interface": {
+    "displayName": "SergejDAGDA Project Documentation"
+  },
+  "plugins": [
+    {
+      "name": "project-documentation",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/SergejDAGDA/agent-project-documentation.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
