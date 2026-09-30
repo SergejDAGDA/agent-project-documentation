@@ -10,16 +10,82 @@ from pathlib import Path
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 HEADING = re.compile(r"^#{1,6}\s+\S", re.MULTILINE)
 
-EXCLUDED = {".git", "node_modules", "vendor", "dist", "build", ".venv", "venv"}
+EXCLUDED_DIRS = {
+    ".git",
+    ".project-documentation",
+    "node_modules",
+    "vendor",
+    "dist",
+    "build",
+    "coverage",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache",
+    "tmp",
+    "temp",
+    "backups",
+}
+
+DATA_DIRS = {
+    "fixture",
+    "fixtures",
+    "snapshot",
+    "snapshots",
+    "testdata",
+    "test-data",
+    "test_data",
+    "runtime",
+    "artifacts",
+}
+
+ROOT_DOCUMENT_NAMES = {
+    "README.md",
+    "README.ru.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "LICENSE.md",
+}
 
 
-def markdown_files(root: Path) -> list[Path]:
+def excluded(path: Path, root: Path) -> bool:
+    rel = path.relative_to(root)
+    parts = {part.lower() for part in rel.parts[:-1]}
+    if any(part in EXCLUDED_DIRS for part in parts):
+        return True
+    if any(part in DATA_DIRS for part in parts):
+        return True
+    return False
+
+
+def is_documentation_surface(path: Path, root: Path) -> bool:
+    rel = path.relative_to(root)
+    if len(rel.parts) == 1:
+        name = rel.name
+        return name in ROOT_DOCUMENT_NAMES or name.startswith("README.")
+
+    top = rel.parts[0].lower()
+    if top == "docs":
+        return True
+
+    if top == "skills":
+        return path.name == "SKILL.md" or "references" in {part.lower() for part in rel.parts}
+
+    return False
+
+
+def markdown_files(root: Path, all_markdown: bool = False) -> list[Path]:
     result: list[Path] = []
     for path in root.rglob("*.md"):
-        if any(part in EXCLUDED for part in path.parts):
+        if not path.is_file() or excluded(path, root):
             continue
-        if path.is_file():
-            result.append(path)
+        if not all_markdown and not is_documentation_surface(path, root):
+            continue
+        result.append(path)
     return sorted(result)
 
 
@@ -36,10 +102,10 @@ def normalized_target(source: Path, raw_target: str) -> Path | None:
     return (source.parent / target).resolve()
 
 
-def audit(root: Path) -> tuple[list[str], list[str]]:
+def audit(root: Path, all_markdown: bool = False) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
-    files = markdown_files(root)
+    files = markdown_files(root, all_markdown=all_markdown)
 
     if not (root / "README.md").exists():
         warnings.append("Root README.md is missing")
@@ -79,10 +145,15 @@ def audit(root: Path) -> tuple[list[str], list[str]]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".", help="Repository root")
+    parser.add_argument(
+        "--all-markdown",
+        action="store_true",
+        help="Audit every Markdown file instead of documentation surfaces only",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
-    errors, warnings = audit(root)
+    errors, warnings = audit(root, all_markdown=args.all_markdown)
 
     for message in warnings:
         print(f"WARN: {message}")

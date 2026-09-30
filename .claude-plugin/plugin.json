@@ -1,6 +1,6 @@
 {
   "name": "project-documentation",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Repository documentation, project reconciliation, continuation diagnostics, contamination checks, and reusable knowledge extraction.",
   "author": {
     "name": "Sergej DAGDA",

@@ -4,6 +4,12 @@
 
 A reusable Agent Skill for turning source repositories into structured, maintainable, and reusable project knowledge.
 
+Repository name: `agent-project-documentation`
+
+Installed Agent Skill name: `project-documentation`
+
+Invoke it as: `$project-documentation`
+
 The skill creates and maintains two documentation levels:
 
 1. A presentation layer for people evaluating or starting with the project.
@@ -80,6 +86,14 @@ The generated structure is adaptive. The skill does not create empty API, databa
 - safe redaction of credential-like diagnostic signals
 - lightweight deterministic repository inventory, Markdown checks, and repository diagnostics
 
+## Safe default behavior
+
+If the request does not name a mode or clearly request file changes, the skill starts with repository discovery plus a read-only audit.
+
+Finding stale documentation does not automatically authorize an `update`.
+
+Project-memory artifacts such as `HANDOFF.md`, `STATUS.md`, `DECISIONS.md`, and `SESSION_LOG.md` can be read as evidence but are not automatically rewritten by ordinary documentation maintenance. Conflicts are reported as out-of-scope inconsistencies unless project-memory maintenance is explicitly included.
+
 ## Modes
 
 The skill supports these workflows:
@@ -119,7 +133,84 @@ contamination
   Detect accidental coupling to previous projects, users, environments, or examples
 ```
 
-Modes are selected from the user's request. They are not tied to a command syntax.
+## Prompt examples
+
+### General first pass
+
+Use this when you want the skill to inspect an existing repository without assuming that files should be changed.
+
+```text
+Use $project-documentation on the current repository.
+Start with repository discovery and a read-only audit.
+Tell me which documentation modes are applicable and what needs attention.
+Do not change files unless I explicitly approve an update.
+```
+
+### Update documentation after code changes
+
+```text
+Use $project-documentation in update mode.
+Inspect the current Git diff and implementation changes.
+Update only documentation that is actually affected.
+Preserve unrelated authored material and report any out-of-scope inconsistencies separately.
+```
+
+### Build full internal documentation
+
+```text
+Use $project-documentation in internal mode.
+Document the current repository as maintainable project knowledge.
+Separate functional contracts from implementation details and include reuse notes for meaningful capabilities.
+```
+
+### Improve the GitHub presentation
+
+```text
+Use $project-documentation in presentation mode.
+Audit and improve the GitHub-facing documentation so a new reader can quickly understand what the project is, what it does, how to start, and where deeper documentation lives.
+Do not turn the README into an internal architecture dump.
+```
+
+### Compare plan with implementation
+
+```text
+Use $project-documentation in reconcile mode.
+Compare accepted project requirements, MVP documents, and recorded decisions with the current implementation.
+Classify the delta and keep unknown reasons explicitly unknown.
+Keep the result internal rather than adding it to the public README.
+```
+
+### Inspect the project before continuing development
+
+```text
+Use $project-documentation in continuation mode.
+Inspect the repository for abandoned, superseded, stale, orphaned, compatibility, or incomplete-migration residue.
+Treat every finding as a review candidate, not as permission to delete code.
+```
+
+### Check for legacy-project contamination
+
+```text
+Use $project-documentation in contamination mode.
+Look for accidental coupling to old projects, example data, user-specific paths, customer-specific values, or environment-specific assumptions.
+Do not reproduce credential-like or private literal values in the report.
+```
+
+### Extract reusable functionality
+
+```text
+Use $project-documentation in extract mode.
+Identify capabilities that can be reused in another project.
+For each useful capability, separate the functional contract, current implementation, dependencies, assumptions, limitations, and reuse notes.
+```
+
+### Document another Agent Skill
+
+```text
+Use $project-documentation in skill-docs mode.
+Document this Agent Skill repository for users and maintainers.
+Cover its trigger contract, workflows, references, scripts, packaging, portability boundaries, and maintenance contract.
+```
 
 ## Agent Skill and plugin documentation
 
@@ -187,10 +278,16 @@ Create a compact repository inventory:
 python skills/project-documentation/scripts/repository_inventory.py --root . --format markdown
 ```
 
-Run lightweight Markdown and skill-structure checks:
+Run lightweight Markdown and skill-structure checks on documentation surfaces:
 
 ```bash
 python skills/project-documentation/scripts/documentation_audit.py --root .
+```
+
+Audit every Markdown file only when that broader scope is intentional:
+
+```bash
+python skills/project-documentation/scripts/documentation_audit.py --root . --all-markdown
 ```
 
 Collect conservative continuation and contamination signals:
@@ -227,7 +324,7 @@ Reuse notes identify portable behavior, boundaries, assumptions, dependencies, a
 
 ## Status
 
-Version 0.2.0 adds internal project reconciliation, continuation analysis, project-contamination analysis, safe diagnostic output, and conservative repository diagnostic signals.
+Version 0.2.1 refines ambiguous-mode routing, project-memory ownership boundaries, bundled-helper discipline, and Markdown audit scope based on the first real repository trial.
 
 ## License
 

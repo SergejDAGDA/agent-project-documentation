@@ -32,6 +32,33 @@ When sources disagree, report the conflict instead of silently choosing the most
 
 Do not overwrite deliberate project documentation merely to force a preferred template.
 
+## Invocation and routing
+
+The repository or plugin package may be named differently from the installed skill. The canonical installed skill name is the YAML frontmatter `name` in this file: `project-documentation`.
+
+If a user refers to this repository as `agent-project-documentation` and the installed skill is `project-documentation`, treat that as the same skill when the repository provenance matches. Do not describe `project-documentation` as a merely similar or fallback skill.
+
+When the user explicitly names a mode or clearly asks for a write operation, use the corresponding mode.
+
+When the request is ambiguous, for example "apply this skill to the current repository", default to repository discovery plus read-only `audit`. Do not select `update` merely because stale documentation is discovered. Report the applicable write-capable modes and findings, then wait for an explicit request before changing files.
+
+Do not ask a clarifying question when read-only audit can safely make progress.
+
+## Documentation ownership boundaries
+
+Documentation can coexist with project-memory or coordination artifacts that have a different maintenance contract.
+
+Files such as `HANDOFF.md`, `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, and clearly identified project-memory directories may be read as evidence, but ordinary `update`, `presentation`, or `internal` work does not automatically own them.
+
+When such an artifact conflicts with current implementation:
+
+1. verify the current implementation independently
+2. report the conflict under `Out-of-scope inconsistencies`
+3. do not rewrite the memory artifact unless the user explicitly includes project-memory maintenance in scope
+4. preserve historical handoff sections that intentionally describe an older checkpoint
+
+If a dedicated project-memory workflow or skill is available, defer mutation of those artifacts to that workflow. Core project documentation must still work when no such skill exists.
+
 ## Modes
 
 Infer the appropriate mode from the request. If the user names a mode, use it.
@@ -50,7 +77,7 @@ Report missing coverage, stale claims, broken internal links, unsupported claims
 
 ### update
 
-Use after project changes.
+Use after project changes when the user requests documentation synchronization or another write operation.
 
 Identify changed implementation surfaces, map them to affected documentation, update only the impacted knowledge, and preserve unaffected authored material.
 
@@ -101,6 +128,22 @@ Treat findings as review candidates rather than deletion instructions. Read `ref
 Use to detect accidental coupling to a previous project, user, customer, environment, example dataset, source identifier, local path, or other context that should not be embedded in reusable logic.
 
 This mode is not a replacement for a dedicated privacy, secret, or security scanner. Redact potentially sensitive literal values from reports. Read `references/contamination-audit.md` and `references/diagnostic-output.md`.
+
+## Bundled helper invocation
+
+Bundled helper commands are part of this skill contract. Use their documented invocation directly.
+
+Do not probe bundled scripts with `--help` before normal execution. Use `--help` only when a documented invocation fails or the installed script demonstrably differs from this skill version. Never repeat the same `--help` probe in one task.
+
+Canonical commands:
+
+```text
+python <skill-directory>/scripts/repository_inventory.py --root <project-root> --format markdown
+python <skill-directory>/scripts/documentation_audit.py --root <project-root>
+python <skill-directory>/scripts/repository_diagnostics.py --root <project-root> --format markdown
+```
+
+The documentation audit checks documentation surfaces by default. Use `--all-markdown` only when the user explicitly wants every Markdown file audited, including Markdown used as test, fixture, sample, or runtime data.
 
 ## Phase 1: Repository discovery
 
@@ -299,6 +342,7 @@ When documentation already exists:
 4. Do not erase unsupported historical context if it is clearly labeled as historical.
 5. Do not convert uncertain rationale into fact.
 6. Keep presentation and internal layers consistent without making them identical.
+7. Keep separately owned project-memory artifacts outside ordinary documentation mutation unless explicitly included in scope.
 
 For update mode, use version control history or a diff when available to focus the review.
 
@@ -320,6 +364,8 @@ Before completion, read `references/quality-gates.md` and check:
 - conservative continuation findings with explicit confidence
 - contamination findings that separate reusable logic from project-specific context
 - sensitive literal redaction in diagnostics
+- correct ownership boundaries for project-memory artifacts
+- absence of unnecessary helper probing
 
 Run `scripts/documentation_audit.py` when local execution is available.
 
@@ -335,6 +381,7 @@ Report:
 - unsupported or partial claims found
 - reconciliation states when requested
 - continuation or contamination findings when requested
+- out-of-scope inconsistencies, including stale project-memory artifacts when relevant
 - validation scripts or tests run
 - unresolved documentation gaps
 

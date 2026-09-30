@@ -48,6 +48,30 @@ Pass when updates preserve deliberate authored material and limit changes to aff
 
 Fail when routine synchronization rewrites the entire documentation set without need.
 
+## Ambiguous invocation safety
+
+Pass when a vague request to apply the skill defaults to discovery plus read-only audit and does not mutate files merely because stale documentation is found.
+
+Fail when the skill silently upgrades an ambiguous request into `update`, `init`, or another write-capable workflow.
+
+## Ownership boundaries
+
+Pass when project-memory and coordination artifacts can be read as evidence but are reported as out-of-scope inconsistencies unless the user explicitly includes their maintenance in scope.
+
+Fail when ordinary documentation synchronization rewrites `HANDOFF.md`, `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, or equivalent memory artifacts without explicit scope.
+
+## Helper discipline
+
+Pass when bundled helper scripts are invoked directly using the documented command and repeated discovery probes are avoided.
+
+Fail when the agent runs `--help` before routine execution without evidence of an interface mismatch or repeats the same `--help` probe.
+
+## Markdown scope
+
+Pass when the default Markdown audit covers documentation surfaces and ignores Markdown used as fixture, sample, QA, generated, or runtime data unless explicitly requested.
+
+Fail when non-documentation Markdown produces noisy documentation warnings by default.
+
 ## Skill profile
 
 For skill or plugin repositories, pass when trigger contract, workflows, resources, packaging, portability, and limitations are documented.

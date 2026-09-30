@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.1
+
+Behavioral routing and audit-scope refinement release.
+
+- Default ambiguous invocations to repository discovery plus read-only `audit`
+- Prevent stale findings from silently escalating an ambiguous request into `update`
+- Clarify repository name `agent-project-documentation` versus installed skill name `project-documentation`
+- Add project-memory ownership boundaries for handoff, status, decision, and session-log artifacts
+- Report project-memory conflicts as out-of-scope inconsistencies unless maintenance is explicitly included
+- Add bundled-helper discipline and forbid routine or repeated `--help` probing
+- Limit the default Markdown audit to documentation surfaces
+- Add `--all-markdown` for intentionally auditing Markdown used as data or test material
+- Add regression tests for documentation-surface filtering
+- Add practical usage prompts to both README languages
+
 ## 0.2.0
 
 Internal evolution and continuation analysis release.
