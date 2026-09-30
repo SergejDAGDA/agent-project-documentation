@@ -50,6 +50,61 @@ class DocumentationAuditTests(unittest.TestCase):
             _, warnings = module.audit(root, all_markdown=True)
             self.assertTrue(any("samples/result.md" in value for value in warnings))
 
+    def test_ignores_handoff_outside_project_memory_by_default(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Demo\n", encoding="utf-8")
+            docs = root / "docs"
+            docs.mkdir()
+            (docs / "TESTSERVER_DEPLOYMENT_HANDOFF.md").write_text(
+                "# Testserver deployment handoff\n\n[Missing](missing.md)\n",
+                encoding="utf-8",
+            )
+            errors, warnings = module.audit(root)
+            self.assertEqual(errors, [])
+            self.assertEqual(warnings, [])
+
+    def test_all_markdown_can_include_handoff_when_explicitly_requested(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Demo\n", encoding="utf-8")
+            docs = root / "docs"
+            docs.mkdir()
+            (docs / "TESTSERVER_DEPLOYMENT_HANDOFF.md").write_text(
+                "# Testserver deployment handoff\n\n[Missing](missing.md)\n",
+                encoding="utf-8",
+            )
+            errors, _ = module.audit(root, all_markdown=True)
+            self.assertTrue(any("TESTSERVER_DEPLOYMENT_HANDOFF.md" in value for value in errors))
+
+    def test_primary_heading_can_mark_coordination_artifact(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Demo\n", encoding="utf-8")
+            docs = root / "docs"
+            docs.mkdir()
+            (docs / "deployment-notes.md").write_text(
+                "# Deployment Handoff\n\n[Missing](missing.md)\n",
+                encoding="utf-8",
+            )
+            errors, warnings = module.audit(root)
+            self.assertEqual(errors, [])
+            self.assertEqual(warnings, [])
+
+    def test_project_memory_directory_is_outside_default_audit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Demo\n", encoding="utf-8")
+            memory = root / "docs" / "project-memory"
+            memory.mkdir(parents=True)
+            (memory / "STATUS.md").write_text(
+                "# Status\n\n[Missing](missing.md)\n",
+                encoding="utf-8",
+            )
+            errors, warnings = module.audit(root)
+            self.assertEqual(errors, [])
+            self.assertEqual(warnings, [])
+
 
 if __name__ == "__main__":
     unittest.main()
