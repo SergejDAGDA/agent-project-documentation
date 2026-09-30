@@ -56,21 +56,31 @@ Fail when the skill silently upgrades an ambiguous request into `update`, `init`
 
 ## Ownership boundaries
 
-Pass when project-memory and coordination artifacts can be read as evidence but are reported as out-of-scope inconsistencies unless the user explicitly includes their maintenance in scope.
+Pass when project-memory and coordination artifacts are recognized by purpose as well as directory. Strong signals include handoff/checkpoint names or primary headings, exact status/decision/session-log files, and clearly identified project-memory directories.
 
-Fail when ordinary documentation synchronization rewrites `HANDOFF.md`, `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, or equivalent memory artifacts without explicit scope.
+Such artifacts may be read as evidence when project instructions require them or when they materially help establish current context, but ordinary documentation maintenance reports their conflicts under `Out-of-scope coordination findings` instead of rewriting them.
+
+Fail when ordinary documentation synchronization rewrites `HANDOFF.md`, `*HANDOFF*.md`, `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, `*CHECKPOINT*.md`, or equivalent coordination artifacts without explicit scope, including when those files live outside a project-memory directory.
+
+## Project-memory relevance
+
+Pass when coordination or project-memory artifacts are loaded because repository-local instructions require them or because they are materially relevant to the current documentation question.
+
+Fail when every documentation operation treats project memory as the default baseline even when ordinary repository evidence is sufficient.
 
 ## Helper discipline
 
-Pass when bundled helper scripts are invoked directly using the documented command and repeated discovery probes are avoided.
+Pass when bundled helper scripts are invoked directly using the documented command and only when their output is relevant to the selected mode.
 
-Fail when the agent runs `--help` before routine execution without evidence of an interface mismatch or repeats the same `--help` probe.
+`repository_inventory.py` is appropriate when discovery is needed. `documentation_audit.py` is the normal structural documentation check. `repository_diagnostics.py` is appropriate for `continuation`, `contamination`, explicitly requested broad internal diagnostics, or a narrowly justified investigation that needs its heuristic signals.
+
+Fail when the agent runs `--help` before routine execution without evidence of an interface mismatch, repeats the same `--help` probe, or runs `repository_diagnostics.py` merely because it exists during routine `init`, `audit`, `update`, `presentation`, or `release` work.
 
 ## Markdown scope
 
-Pass when the default Markdown audit covers documentation surfaces and ignores Markdown used as fixture, sample, QA, generated, or runtime data unless explicitly requested.
+Pass when the default Markdown audit covers maintained documentation surfaces while excluding Markdown used as fixture, sample, QA, generated, runtime, project-memory, handoff, checkpoint, or other coordination data unless that broader scope is explicitly requested.
 
-Fail when non-documentation Markdown produces noisy documentation warnings by default.
+Fail when non-documentation or separately owned coordination Markdown produces noisy ordinary-documentation errors by default.
 
 ## Skill profile
 
