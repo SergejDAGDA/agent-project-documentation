@@ -93,7 +93,9 @@ Repository
 
 Обнаружение устаревшей документации само по себе не означает разрешение на `update`.
 
-Project-memory файлы вроде `HANDOFF.md`, `STATUS.md`, `DECISIONS.md` и `SESSION_LOG.md` можно читать как evidence, но обычное сопровождение документации не должно автоматически их переписывать. Конфликты с ними выводятся как out-of-scope inconsistencies, если пользователь отдельно не включил project-memory maintenance в задачу.
+Project-memory и coordination artifacts распознаются по назначению, а не только по каталогу. Сильные признаки: имена вроде `*HANDOFF*.md` и `*CHECKPOINT*.md`, точные файлы `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, основной заголовок, явно обозначающий handoff/checkpoint/status/log, а также явно выделенные project-memory каталоги.
+
+Такие файлы можно читать как evidence, когда этого требуют локальные инструкции проекта или когда они действительно нужны для понимания текущего контекста, но обычное сопровождение документации не должно автоматически их переписывать. Конфликты выводятся в `Out-of-scope coordination findings`, если пользователь отдельно не включил их сопровождение в задачу.
 
 ## Режимы
 
@@ -150,8 +152,9 @@ contamination
 ```text
 Используй $project-documentation в режиме update.
 Проверь текущий Git diff и изменения реализации.
-Обнови только действительно затронутую документацию.
-Не переписывай несвязанный авторский текст и отдельно сообщи о найденных out-of-scope inconsistencies.
+Обнови только действительно затронутую поддерживаемую документацию.
+Считай handoff, status, decisions, session-log, checkpoint и project-memory файлы отдельно сопровождаемыми coordination artifacts, если я явно не включил их сопровождение в задачу.
+Найденные out-of-scope coordination findings выведи отдельно.
 ```
 
 ### Полная внутренняя документация
@@ -261,31 +264,33 @@ plugin.json
 
 ## Вспомогательные скрипты
 
-Инвентаризация репозитория:
+Инвентаризация репозитория, когда она нужна для discovery:
 
 ```bash
 python skills/project-documentation/scripts/repository_inventory.py --root . --format markdown
 ```
 
-Проверка структуры документационных Markdown-файлов и Agent Skills:
+Проверка структуры поддерживаемых документационных Markdown-файлов и Agent Skills:
 
 ```bash
 python skills/project-documentation/scripts/documentation_audit.py --root .
 ```
 
-Проверка вообще всех Markdown-файлов включается только при необходимости:
+Обычный audit по умолчанию исключает Markdown, используемый как данные, а также отдельно сопровождаемые coordination artifacts вроде handoff и project-memory файлов. Проверка вообще всех Markdown-файлов включается только при сознательно выбранной широкой области:
 
 ```bash
 python skills/project-documentation/scripts/documentation_audit.py --root . --all-markdown
 ```
 
-Сбор консервативных сигналов для continuation и contamination audit:
+Сбор консервативных residue/contamination сигналов запускается только для continuation, contamination, явно запрошенной широкой диагностики или конкретного расследования, которому действительно нужны такие эвристические сигналы:
 
 ```bash
 python skills/project-documentation/scripts/repository_diagnostics.py --root . --format markdown
 ```
 
 Известные названия старых проектов, клиентов или источников можно передавать повторяющимся аргументом `--marker`. Диагностические результаты по умолчанию должны оставаться в `.project-documentation/`, который исключен из Git.
+
+`repository_diagnostics.py` не является рутинным quality gate для обычных `init`, `audit`, `update`, `presentation` или `release`.
 
 Скрипты помогают агенту, но не заменяют анализ исходного кода, language-specific static analysis, secret scanning и security review.
 
@@ -307,13 +312,17 @@ python skills/project-documentation/scripts/repository_diagnostics.py --root . -
 
 Имеющая смысл авторская документация должна сохраняться. Режим update меняет только знания, которые действительно затронуты изменениями проекта.
 
+### Coordination остается отдельно сопровождаемой областью
+
+Handoff, checkpoint, project status, decisions, session log и project-memory файлы могут использоваться как evidence, но не входят автоматически в обычный documentation update.
+
 ### Повторное использование без слепого копирования
 
 Reuse notes описывают переносимое поведение, границы, предположения, зависимости и ограничения.
 
 ## Статус
 
-Версия 0.2.1 уточняет routing для неоднозначных запросов, границы владения project-memory файлами, дисциплину запуска bundled helpers и область проверки Markdown по результатам первого реального прогона на существующем репозитории.
+Версия 0.2.2 уточняет семантическое распознавание coordination artifacts, исключает их из обычного Markdown audit по умолчанию и запускает repository diagnostics только в режимах, которым действительно нужны эвристические residue или contamination сигналы.
 
 ## Лицензия
 
