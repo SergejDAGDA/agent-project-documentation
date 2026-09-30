@@ -20,7 +20,7 @@ Canonical documentation: `functionality/repository-documentation.md`
 
 Status: verified
 
-Supports audit, targeted update, and release documentation workflows with source-grounding and maintenance-safety rules.
+Supports audit, targeted update, and release documentation workflows with source-grounding, audit-first routing for ambiguous requests, maintenance-safety rules, and semantic coordination ownership boundaries.
 
 Canonical documentation: `functionality/repository-documentation.md`
 
@@ -44,7 +44,7 @@ Implementation: `../skills/project-documentation/scripts/repository_inventory.py
 
 Status: verified
 
-Provides a Python helper that checks Markdown local links, root README presence, capability index expectations, and basic Agent Skill frontmatter structure.
+Provides a Python helper that checks maintained Markdown documentation surfaces, local links, root README presence, capability index expectations, and basic Agent Skill frontmatter structure. Markdown used as data and separately owned coordination artifacts are excluded by default, with `--all-markdown` available for an explicit broad scan.
 
 Implementation: `../skills/project-documentation/scripts/documentation_audit.py`
 
@@ -76,6 +76,6 @@ Canonical documentation: `functionality/project-evolution-and-diagnostics.md`
 
 Status: verified
 
-Provides a conservative Python helper for maintenance markers, legacy references, user-specific paths, known context markers, example-derived candidates, project URL candidates, and redacted credential-like signals.
+Provides a conservative Python helper for maintenance markers, legacy references, user-specific paths, known context markers, example-derived candidates, project URL candidates, and redacted credential-like signals. The helper is mode-gated for continuation, contamination, explicit broad diagnostics, or a narrowly justified investigation rather than routine documentation updates.
 
 Implementation: `../skills/project-documentation/scripts/repository_diagnostics.py`

@@ -1,4 +1,4 @@
 interface:
   display_name: "Project Documentation"
   short_description: "Document, reconcile, and inspect reusable repository knowledge"
-  default_prompt: "Inspect this repository with $project-documentation. If no mode is explicit, start with repository discovery and a read-only audit, report which documentation modes are applicable, and do not change files until a write-capable mode is explicitly requested."
+  default_prompt: "Inspect this repository with $project-documentation. If no mode is explicit, start with repository discovery and a read-only audit. Treat handoff, status, decisions, session-log, checkpoint, and project-memory artifacts as separately owned coordination evidence unless their maintenance is explicitly requested, and run repository diagnostics only when the selected mode actually needs them."

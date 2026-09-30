@@ -9,6 +9,7 @@ from pathlib import Path
 
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 HEADING = re.compile(r"^#{1,6}\s+\S", re.MULTILINE)
+FIRST_H1 = re.compile(r"^\s*#\s+(.+)$", re.MULTILINE)
 
 EXCLUDED_DIRS = {
     ".git",
@@ -39,6 +40,13 @@ DATA_DIRS = {
     "artifacts",
 }
 
+PROJECT_MEMORY_DIRS = {
+    "project-memory",
+    "project_memory",
+    ".project-memory",
+    ".project_memory",
+}
+
 ROOT_DOCUMENT_NAMES = {
     "README.md",
     "README.ru.md",
@@ -51,6 +59,25 @@ ROOT_DOCUMENT_NAMES = {
     "LICENSE.md",
 }
 
+COORDINATION_EXACT_NAMES = {
+    "STATUS.MD",
+    "DECISIONS.MD",
+    "SESSION_LOG.MD",
+}
+
+COORDINATION_NAME_TOKENS = {
+    "HANDOFF",
+    "CHECKPOINT",
+}
+
+COORDINATION_HEADING_PATTERNS = (
+    re.compile(r"\bhandoff\b", re.IGNORECASE),
+    re.compile(r"\bsession\s+log\b", re.IGNORECASE),
+    re.compile(r"\bdecision(?:s|\s+log)?\b", re.IGNORECASE),
+    re.compile(r"\bproject\s+status\b", re.IGNORECASE),
+    re.compile(r"\bcheckpoint\b", re.IGNORECASE),
+)
+
 
 def excluded(path: Path, root: Path) -> bool:
     rel = path.relative_to(root)
@@ -62,7 +89,41 @@ def excluded(path: Path, root: Path) -> bool:
     return False
 
 
+def is_coordination_artifact(path: Path, root: Path) -> bool:
+    """Return True for strong project-memory or coordination signals.
+
+    This intentionally uses conservative structural signals rather than trying to
+    infer arbitrary document semantics. Coordination artifacts remain available
+    through ``--all-markdown`` when a broad audit is explicitly requested.
+    """
+
+    rel = path.relative_to(root)
+    parent_parts = {part.lower() for part in rel.parts[:-1]}
+    if any(part in PROJECT_MEMORY_DIRS for part in parent_parts):
+        return True
+
+    upper_name = path.name.upper()
+    if upper_name in COORDINATION_EXACT_NAMES:
+        return True
+    if any(token in upper_name for token in COORDINATION_NAME_TOKENS):
+        return True
+
+    try:
+        prefix = path.read_text(encoding="utf-8", errors="replace")[:4000]
+    except OSError:
+        return False
+
+    first_h1 = FIRST_H1.search(prefix)
+    if first_h1 is None:
+        return False
+    heading = first_h1.group(1)
+    return any(pattern.search(heading) for pattern in COORDINATION_HEADING_PATTERNS)
+
+
 def is_documentation_surface(path: Path, root: Path) -> bool:
+    if is_coordination_artifact(path, root):
+        return False
+
     rel = path.relative_to(root)
     if len(rel.parts) == 1:
         name = rel.name

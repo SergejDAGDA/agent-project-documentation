@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.2
+
+Coordination ownership and helper-routing refinement release.
+
+- Detect coordination artifacts by purpose as well as directory
+- Treat `*HANDOFF*.md`, `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, `*CHECKPOINT*.md`, and equivalent primary coordination headings as separately owned by default
+- Keep stale or broken coordination content out of ordinary documentation mutation and report it under `Out-of-scope coordination findings`
+- Read project-memory and coordination artifacts only when repository-local instructions require them or when they materially help establish current context
+- Exclude coordination artifacts from the default Markdown documentation audit while preserving explicit `--all-markdown` coverage
+- Gate `repository_diagnostics.py` to continuation, contamination, explicit broad diagnostics, or narrowly justified investigations instead of routine documentation updates
+- Add regression tests for handoff files outside project-memory directories, primary handoff headings, and project-memory audit exclusion
+- Refine skill metadata, internal documentation, and default agent prompt around the new ownership boundary
+
 ## 0.2.1
 
 Behavioral routing and audit-scope refinement release.

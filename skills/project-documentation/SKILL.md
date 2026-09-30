@@ -48,14 +48,26 @@ Do not ask a clarifying question when read-only audit can safely make progress.
 
 Documentation can coexist with project-memory or coordination artifacts that have a different maintenance contract.
 
-Files such as `HANDOFF.md`, `STATUS.md`, `DECISIONS.md`, `SESSION_LOG.md`, and clearly identified project-memory directories may be read as evidence, but ordinary `update`, `presentation`, or `internal` work does not automatically own them.
+Determine ownership by purpose, not only by directory. Strong coordination signals include:
 
-When such an artifact conflicts with current implementation:
+- a filename containing `HANDOFF` or `CHECKPOINT`
+- exact files such as `STATUS.md`, `DECISIONS.md`, or `SESSION_LOG.md`
+- a primary heading that clearly identifies the document as a handoff, checkpoint, decision log, session log, or project status artifact
+- clearly identified project-memory directories
+- an explicit repository-local rule saying the file is maintained as session, deployment, agent, or coordination state
+
+A file can therefore be a coordination artifact even when it lives directly under `docs/` or another ordinary documentation directory.
+
+Coordination and project-memory artifacts may be read as evidence, but ordinary `update`, `presentation`, or `internal` work does not automatically own them.
+
+Read them when repository-local instructions require it or when they materially help establish current context. Do not treat project memory as the default documentation baseline when current code, tests, configuration, and maintained documentation are sufficient.
+
+When a coordination artifact conflicts with current implementation:
 
 1. verify the current implementation independently
-2. report the conflict under `Out-of-scope inconsistencies`
-3. do not rewrite the memory artifact unless the user explicitly includes project-memory maintenance in scope
-4. preserve historical handoff sections that intentionally describe an older checkpoint
+2. report the conflict under `Out-of-scope coordination findings`
+3. do not rewrite the coordination artifact unless the user explicitly includes its maintenance in scope
+4. preserve historical handoff or checkpoint sections that intentionally describe an older state
 
 If a dedicated project-memory workflow or skill is available, defer mutation of those artifacts to that workflow. Core project documentation must still work when no such skill exists.
 
@@ -80,6 +92,8 @@ Report missing coverage, stale claims, broken internal links, unsupported claims
 Use after project changes when the user requests documentation synchronization or another write operation.
 
 Identify changed implementation surfaces, map them to affected documentation, update only the impacted knowledge, and preserve unaffected authored material.
+
+Do not edit separately owned coordination artifacts merely because they contain stale or broken content. Report those findings separately unless the user explicitly includes coordination maintenance.
 
 ### presentation
 
@@ -143,7 +157,15 @@ python <skill-directory>/scripts/documentation_audit.py --root <project-root>
 python <skill-directory>/scripts/repository_diagnostics.py --root <project-root> --format markdown
 ```
 
-The documentation audit checks documentation surfaces by default. Use `--all-markdown` only when the user explicitly wants every Markdown file audited, including Markdown used as test, fixture, sample, or runtime data.
+Use helpers according to the selected mode:
+
+- `repository_inventory.py`: run when repository discovery benefits from a compact deterministic inventory
+- `documentation_audit.py`: normal structural documentation check for maintained documentation surfaces
+- `repository_diagnostics.py`: run for `continuation`, `contamination`, explicitly requested broad internal diagnostics, or a narrowly justified investigation that needs heuristic residue/contamination signals
+
+Do not run `repository_diagnostics.py` as a routine quality gate for `init`, `audit`, `update`, `presentation`, or `release` merely because the helper exists.
+
+The documentation audit excludes Markdown used as fixture, sample, QA, generated, runtime, project-memory, handoff, checkpoint, and similar coordination material by default. Use `--all-markdown` only when the user explicitly wants every Markdown file audited.
 
 ## Phase 1: Repository discovery
 
@@ -154,8 +176,9 @@ Before writing documentation:
 3. Inspect package, build, dependency, workspace, plugin, deployment, schema, and test configuration that materially explains the project.
 4. Identify source roots, entry points, boundaries, generated content, vendored content, and excluded directories.
 5. Detect whether the repository is an application, library, CLI, service, plugin, Agent Skill, monorepo, documentation project, infrastructure project, or a combination.
-6. Identify existing documentation and determine what is authoritative, stale, duplicated, generated, or incomplete.
-7. Run `scripts/repository_inventory.py` when local execution is available and its output will reduce guesswork.
+6. Identify existing documentation and distinguish maintained documentation from generated/data Markdown and separately owned coordination artifacts.
+7. Read project-memory or coordination artifacts only when repository-local instructions require them or when they materially help establish current context.
+8. Run `scripts/repository_inventory.py` when local execution is available and its output will reduce guesswork.
 
 Read `references/repository-analysis.md` for the discovery procedure.
 
@@ -210,6 +233,7 @@ Rules:
 - Do not create deployment documentation for a package that has no deployment process.
 - Do not manufacture ADRs or historical decisions when rationale is not evidenced.
 - Do not duplicate the same explanation across multiple files. Prefer a canonical document and link or reference it.
+- Do not absorb coordination artifacts into the maintained documentation set merely because they are Markdown files under `docs/`.
 
 ## Phase 4: Build the presentation layer
 
@@ -332,17 +356,20 @@ When evidence is conflicting or incomplete, mark the limitation in the documenta
 
 Do not claim that a test passes unless it was actually run successfully in the current task.
 
+For write-capable modes, verify that the final diff does not include coordination artifacts unless their maintenance was explicitly in scope.
+
 ## Phase 9: Update safety
 
 When documentation already exists:
 
-1. Determine which parts are human-authored, generated, or uncertain.
+1. Determine which parts are human-authored, generated, uncertain, data-like, or coordination-owned.
 2. Preserve deliberate prose and project identity unless it is false or the user requested a rewrite.
 3. Update the smallest affected documentation surface.
 4. Do not erase unsupported historical context if it is clearly labeled as historical.
 5. Do not convert uncertain rationale into fact.
 6. Keep presentation and internal layers consistent without making them identical.
-7. Keep separately owned project-memory artifacts outside ordinary documentation mutation unless explicitly included in scope.
+7. Keep separately owned project-memory and coordination artifacts outside ordinary documentation mutation unless explicitly included in scope.
+8. If a coordination artifact contains a broken link or stale claim, report it rather than fixing it during ordinary `update`.
 
 For update mode, use version control history or a diff when available to focus the review.
 
@@ -356,7 +383,7 @@ Before completion, read `references/quality-gates.md` and check:
 - presentation clarity
 - navigation
 - duplication
-- broken internal references
+- broken internal references in maintained documentation surfaces
 - adaptive structure
 - portability of reusable knowledge
 - skill profile coverage when applicable
@@ -364,8 +391,9 @@ Before completion, read `references/quality-gates.md` and check:
 - conservative continuation findings with explicit confidence
 - contamination findings that separate reusable logic from project-specific context
 - sensitive literal redaction in diagnostics
-- correct ownership boundaries for project-memory artifacts
+- semantic ownership boundaries for coordination and project-memory artifacts
 - absence of unnecessary helper probing
+- mode-appropriate helper execution
 
 Run `scripts/documentation_audit.py` when local execution is available.
 
@@ -381,8 +409,8 @@ Report:
 - unsupported or partial claims found
 - reconciliation states when requested
 - continuation or contamination findings when requested
-- out-of-scope inconsistencies, including stale project-memory artifacts when relevant
-- validation scripts or tests run
+- `Out-of-scope coordination findings` when relevant
+- validation scripts or tests actually run
 - unresolved documentation gaps
 
 Do not report documentation as complete when known material gaps remain.

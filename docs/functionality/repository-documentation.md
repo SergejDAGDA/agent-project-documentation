@@ -18,8 +18,9 @@ Structural helpers are covered by unit tests in `tests/`.
 
 - a source repository or project directory
 - repository-local instructions when present
-- existing documentation when present
+- existing maintained documentation when present
 - source code, tests, configuration, schemas, manifests, and related project evidence
+- project-memory or coordination artifacts only when required by local instructions or materially relevant
 - a user intent such as initial documentation, audit, update, release check, presentation work, or knowledge extraction
 
 ### Outputs
@@ -34,13 +35,14 @@ Depending on repository needs and requested mode:
 - technical reference documentation
 - reuse notes
 - audit findings
+- out-of-scope coordination findings
 - completion evidence describing verified and unresolved areas
 
 ### Modes
 
 The skill defines `init`, `audit`, `update`, `presentation`, `internal`, `release`, `extract`, `skill-docs`, `reconcile`, `continuation`, and `contamination` workflows.
 
-Mode selection is intent-driven rather than tied to a required command syntax.
+Mode selection is intent-driven rather than tied to a required command syntax. Ambiguous requests default to read-only audit rather than write-capable update.
 
 ### Capability discovery
 
@@ -60,6 +62,10 @@ For example, a project with no API should not receive empty API documentation so
 
 When documentation exists, the workflow should preserve deliberate authored content and update the smallest affected documentation surface.
 
+Coordination artifacts are identified by purpose as well as location. Handoff/checkpoint documents, exact status/decision/session-log files, primary coordination headings, and clearly identified project-memory directories remain outside ordinary documentation mutation unless the user explicitly includes them.
+
+Broken links or stale statements inside those artifacts are reported rather than silently repaired by ordinary `update`.
+
 ### Failure and uncertainty behavior
 
 When code, tests, existing docs, or configuration conflict, the workflow reports the disagreement instead of silently converting one version into fact.
@@ -72,7 +78,7 @@ Unknown historical rationale must remain unknown unless supported by repository 
 
 `skills/project-documentation/SKILL.md`
 
-Defines purpose, modes, discovery, capability analysis, output rules, verification, update safety, quality gates, and completion evidence.
+Defines purpose, modes, discovery, capability analysis, output rules, coordination ownership, verification, update safety, quality gates, and completion evidence.
 
 ### Supporting references
 
@@ -88,11 +94,11 @@ Defines purpose, modes, discovery, capability analysis, output rules, verificati
 
 ### Deterministic helpers
 
-`repository_inventory.py` builds a compact repository inventory.
+`repository_inventory.py` builds a compact repository inventory when discovery needs it.
 
-`documentation_audit.py` performs lightweight Markdown and skill-structure checks.
+`documentation_audit.py` performs lightweight Markdown and skill-structure checks on maintained documentation surfaces while excluding data-like and coordination Markdown by default. `--all-markdown` opts into a broader scan.
 
-`repository_diagnostics.py` emits conservative continuation and contamination signals while redacting credential-like literals.
+`repository_diagnostics.py` emits conservative continuation and contamination signals while redacting credential-like literals. It is not a routine quality gate for ordinary documentation updates.
 
 The helpers do not generate project prose and do not replace agent reasoning.
 
@@ -111,3 +117,5 @@ Do not copy platform-specific plugin manifests into environments that use differ
 ## Known limitations
 
 The deterministic helpers intentionally perform structural checks only. They do not parse arbitrary programming languages deeply and cannot independently prove semantic documentation correctness.
+
+Coordination detection in the Markdown helper is deliberately conservative and based on strong path, filename, and primary-heading signals; ambiguous files still require agent judgment.
