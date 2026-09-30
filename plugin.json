@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "project-documentation",
-  "version": "0.2.1",
-  "description": "Repository documentation and reusable knowledge extraction with safe audit-first routing, reconciliation, continuation, contamination, update, release, and Agent Skill workflows.",
+  "version": "0.2.2",
+  "description": "Repository documentation and reusable knowledge extraction with audit-first routing, semantic coordination ownership, reconciliation, continuation, contamination, update, release, and Agent Skill workflows.",
   "author": {
     "name": "Sergej DAGDA",
     "url": "https://github.com/SergejDAGDA"
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Project Documentation",
     "shortDescription": "Document, reconcile, and inspect reusable repository knowledge",
-    "longDescription": "Creates and maintains GitHub-facing presentation documentation and detailed internal project knowledge, starts ambiguous invocations with a read-only audit, reconciles accepted plans with implementation, identifies development residue and accidental project-specific contamination, extracts reusable capabilities, and documents Agent Skills and plugins.",
+    "longDescription": "Creates and maintains GitHub-facing presentation documentation and detailed internal project knowledge, starts ambiguous invocations with a read-only audit, keeps handoff and project-memory coordination artifacts outside ordinary documentation mutation unless explicitly requested, reconciles accepted plans with implementation, identifies development residue and accidental project-specific contamination, extracts reusable capabilities, and documents Agent Skills and plugins.",
     "developerName": "Sergej DAGDA",
     "category": "Developer Tools",
     "capabilities": [
@@ -33,7 +33,7 @@
     "websiteURL": "https://github.com/SergejDAGDA/agent-project-documentation",
     "defaultPrompt": [
       "Audit this repository with project-documentation. Start read-only and tell me which documentation modes are applicable before changing files.",
-      "Update only documentation affected by the current implementation changes and report out-of-scope project-memory inconsistencies separately.",
+      "Update only maintained documentation affected by the current implementation changes and report coordination or project-memory inconsistencies separately without rewriting them unless explicitly requested.",
       "Compare the accepted project plan with the current implementation and document the delta internally.",
       "Inspect this repository for abandoned or superseded development residue before we continue work.",
       "Check this reusable project for accidental legacy-example or project-specific contamination.",
