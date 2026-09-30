@@ -38,7 +38,7 @@ Depending on repository needs and requested mode:
 
 ### Modes
 
-The skill defines `init`, `audit`, `update`, `presentation`, `internal`, `release`, `extract`, and `skill-docs` workflows.
+The skill defines `init`, `audit`, `update`, `presentation`, `internal`, `release`, `extract`, `skill-docs`, `reconcile`, `continuation`, and `contamination` workflows.
 
 Mode selection is intent-driven rather than tied to a required command syntax.
 
@@ -81,12 +81,18 @@ Defines purpose, modes, discovery, capability analysis, output rules, verificati
 - `feature-documentation.md` defines capability documentation and reuse notes
 - `quality-gates.md` defines acceptance checks
 - `skill-profile.md` defines Agent Skill and plugin specialization
+- `evolution-reconciliation.md` defines plan-versus-implementation traceability
+- `continuation-audit.md` defines project-residue analysis
+- `contamination-audit.md` defines accidental context-coupling analysis
+- `diagnostic-output.md` defines safe local diagnostic output
 
 ### Deterministic helpers
 
 `repository_inventory.py` builds a compact repository inventory.
 
 `documentation_audit.py` performs lightweight Markdown and skill-structure checks.
+
+`repository_diagnostics.py` emits conservative continuation and contamination signals while redacting credential-like literals.
 
 The helpers do not generate project prose and do not replace agent reasoning.
 
