@@ -92,7 +92,9 @@ If the request does not name a mode or clearly request file changes, the skill s
 
 Finding stale documentation does not automatically authorize an `update`.
 
-Project-memory artifacts such as `HANDOFF.md`, `STATUS.md`, `DECISIONS.md`, and `SESSION_LOG.md` can be read as evidence but are not automatically rewritten by ordinary documentation maintenance. Conflicts are reported as out-of-scope inconsistencies unless project-memory maintenance is explicitly included.
+Project-memory and coordination artifacts are recognized by purpose as well as directory. Strong signals include filenames such as `*HANDOFF*.md` and `*CHECKPOINT*.md`, exact files such as `STATUS.md`, `DECISIONS.md`, and `SESSION_LOG.md`, primary headings that identify a handoff/checkpoint/status/log, and clearly identified project-memory directories.
+
+Those artifacts can be read as evidence when repository-local instructions require them or when they materially help establish current context, but ordinary documentation maintenance does not automatically rewrite them. Conflicts are reported under `Out-of-scope coordination findings` unless their maintenance is explicitly included in the request.
 
 ## Modes
 
@@ -151,8 +153,9 @@ Do not change files unless I explicitly approve an update.
 ```text
 Use $project-documentation in update mode.
 Inspect the current Git diff and implementation changes.
-Update only documentation that is actually affected.
-Preserve unrelated authored material and report any out-of-scope inconsistencies separately.
+Update only maintained documentation that is actually affected.
+Treat handoff, status, decisions, session-log, checkpoint, and project-memory artifacts as separately owned coordination evidence unless I explicitly include their maintenance.
+Report out-of-scope coordination findings separately.
 ```
 
 ### Build full internal documentation
@@ -272,31 +275,33 @@ The repository also includes `.claude-plugin/plugin.json` and keeps the same `sk
 
 ## Deterministic helpers
 
-Create a compact repository inventory:
+Create a compact repository inventory when discovery needs it:
 
 ```bash
 python skills/project-documentation/scripts/repository_inventory.py --root . --format markdown
 ```
 
-Run lightweight Markdown and skill-structure checks on documentation surfaces:
+Run lightweight Markdown and skill-structure checks on maintained documentation surfaces:
 
 ```bash
 python skills/project-documentation/scripts/documentation_audit.py --root .
 ```
 
-Audit every Markdown file only when that broader scope is intentional:
+The default audit excludes Markdown used as data and separately owned coordination artifacts such as handoffs and project-memory files. Audit every Markdown file only when that broader scope is intentional:
 
 ```bash
 python skills/project-documentation/scripts/documentation_audit.py --root . --all-markdown
 ```
 
-Collect conservative continuation and contamination signals:
+Collect conservative residue and contamination signals only for continuation, contamination, explicitly requested broad diagnostics, or a narrowly justified investigation:
 
 ```bash
 python skills/project-documentation/scripts/repository_diagnostics.py --root . --format markdown
 ```
 
 Known legacy or project-specific names can be supplied with repeated `--marker` arguments. Diagnostic output should normally stay under `.project-documentation/`, which is ignored by version control.
+
+`repository_diagnostics.py` is not a routine quality gate for normal `init`, `audit`, `update`, `presentation`, or `release` work.
 
 These scripts assist the agent. They do not replace source inspection, factual verification, language-specific static analysis, secret scanning, or security review.
 
@@ -318,13 +323,17 @@ The repository determines the documentation structure, not a fixed template.
 
 Existing deliberate documentation is preserved when possible. Update mode should modify only the knowledge affected by the implementation change.
 
+### Coordination stays separately owned
+
+Handoffs, checkpoints, project status, decisions, session logs, and project-memory artifacts may inform the audit but remain outside ordinary documentation mutation unless explicitly included.
+
 ### Reuse without cargo culting
 
 Reuse notes identify portable behavior, boundaries, assumptions, dependencies, and limitations instead of recommending blind source copying.
 
 ## Status
 
-Version 0.2.1 refines ambiguous-mode routing, project-memory ownership boundaries, bundled-helper discipline, and Markdown audit scope based on the first real repository trial.
+Version 0.2.2 refines semantic coordination-artifact ownership, excludes coordination material from the ordinary Markdown audit by default, and gates repository diagnostics to modes that actually need heuristic residue or contamination signals.
 
 ## License
 
