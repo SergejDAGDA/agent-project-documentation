@@ -47,3 +47,35 @@ Status: verified
 Provides a Python helper that checks Markdown local links, root README presence, capability index expectations, and basic Agent Skill frontmatter structure.
 
 Implementation: `../skills/project-documentation/scripts/documentation_audit.py`
+
+## Plan versus implementation reconciliation
+
+Status: verified
+
+Compares credible accepted project intent with current implementation and records material deltas without inventing historical rationale.
+
+Canonical documentation: `functionality/project-evolution-and-diagnostics.md`
+
+## Continuation audit
+
+Status: verified
+
+Identifies possible abandoned, superseded, orphaned, stale, compatibility, and incomplete-migration residue for review before further development.
+
+Canonical documentation: `functionality/project-evolution-and-diagnostics.md`
+
+## Project contamination audit
+
+Status: verified
+
+Identifies accidental project-specific, user-specific, environment-specific, or example-derived context in reusable implementation, with safe handling of credential-like values.
+
+Canonical documentation: `functionality/project-evolution-and-diagnostics.md`
+
+## Repository diagnostic signals
+
+Status: verified
+
+Provides a conservative Python helper for maintenance markers, legacy references, user-specific paths, known context markers, example-derived candidates, project URL candidates, and redacted credential-like signals.
+
+Implementation: `../skills/project-documentation/scripts/repository_diagnostics.py`

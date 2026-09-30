@@ -29,6 +29,9 @@ Detailed functional, architectural, development, reference, and reuse documentat
 - separate functional contracts from current implementation
 - make useful solutions easier to transfer to future projects
 - support documentation of Agent Skills themselves
+- compare accepted project intent with current implementation for internal traceability
+- identify development residue that deserves review before further work
+- detect accidental coupling to previous projects, users, environments, or examples
 
 ## Repository layout
 

@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "project-documentation",
-  "version": "0.1.0",
-  "description": "Repository documentation and reusable knowledge extraction with presentation, internal, audit, update, release, and Agent Skill documentation workflows.",
+  "version": "0.2.0",
+  "description": "Repository documentation and reusable knowledge extraction with presentation, internal, reconciliation, continuation, contamination, audit, update, release, and Agent Skill workflows.",
   "author": {
     "name": "Sergej DAGDA",
     "url": "https://github.com/SergejDAGDA"
@@ -21,8 +21,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Project Documentation",
-    "shortDescription": "Extract and maintain reusable repository documentation",
-    "longDescription": "Creates and maintains GitHub-facing presentation documentation and detailed internal project knowledge, separates functional contracts from implementation, extracts reusable capabilities, audits documentation against source evidence, and documents Agent Skills and plugins.",
+    "shortDescription": "Document, reconcile, and inspect reusable repository knowledge",
+    "longDescription": "Creates and maintains GitHub-facing presentation documentation and detailed internal project knowledge, reconciles accepted plans with implementation, identifies development residue and accidental project-specific contamination, extracts reusable capabilities, audits documentation against source evidence, and documents Agent Skills and plugins.",
     "developerName": "Sergej DAGDA",
     "category": "Developer Tools",
     "capabilities": [
@@ -33,8 +33,9 @@
     "websiteURL": "https://github.com/SergejDAGDA/agent-project-documentation",
     "defaultPrompt": [
       "Document this repository with a clear README and detailed internal project knowledge.",
-      "Audit this project's documentation against the current implementation.",
-      "Extract reusable capabilities from this repository for use in another project.",
+      "Compare the accepted project plan with the current implementation and document the delta internally.",
+      "Inspect this repository for abandoned or superseded development residue before we continue work.",
+      "Check this reusable project for accidental legacy-example or project-specific contamination.",
       "Document this Agent Skill repository for users and maintainers."
     ]
   }

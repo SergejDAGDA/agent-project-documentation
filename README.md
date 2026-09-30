@@ -24,6 +24,9 @@ The result is useful for:
 - maintenance
 - documentation audits
 - release preparation
+- plan-versus-implementation reconciliation
+- continuation audits before further development
+- detection of accidental legacy or project-specific coupling
 - AI-assisted development
 - knowledge transfer
 - reuse of capabilities in later projects
@@ -43,7 +46,11 @@ Repository
 |   |-- architecture
 |   |-- implementation reference
 |   |-- development and operations
-|   `-- reuse notes
+|   |-- reuse notes
+|   `-- optional evolution traceability
+|
+|-- Local diagnostics
+|   `-- .project-documentation/
 |
 `-- Optional agent routing
     `-- AGENTS.md or CLAUDE.md pointers to canonical docs
@@ -65,7 +72,11 @@ The generated structure is adaptive. The skill does not create empty API, databa
 - targeted documentation updates after code changes
 - release documentation checks
 - Agent Skill and plugin documentation profile
-- lightweight deterministic repository inventory and Markdown checks
+- plan-versus-implementation reconciliation for internal traceability
+- continuation analysis for development residue and incomplete transitions
+- project contamination analysis for legacy examples and project-specific data
+- safe redaction of credential-like diagnostic signals
+- lightweight deterministic repository inventory, Markdown checks, and repository diagnostics
 
 ## Modes
 
@@ -95,6 +106,15 @@ extract
 
 skill-docs
   Document an Agent Skill or plugin repository
+
+reconcile
+  Compare accepted project intent with current implementation
+
+continuation
+  Identify development residue that deserves review before more work
+
+contamination
+  Detect accidental coupling to previous projects, users, environments, or examples
 ```
 
 Modes are selected from the user's request. They are not tied to a command syntax.
@@ -133,9 +153,14 @@ skills/
       quality-gates.md
       repository-analysis.md
       skill-profile.md
+      evolution-reconciliation.md
+      continuation-audit.md
+      contamination-audit.md
+      diagnostic-output.md
     scripts/
       repository_inventory.py
       documentation_audit.py
+      repository_diagnostics.py
 
 plugin.json
 .claude-plugin/
@@ -166,7 +191,15 @@ Run lightweight Markdown and skill-structure checks:
 python skills/project-documentation/scripts/documentation_audit.py --root .
 ```
 
-These scripts assist the agent. They do not replace source inspection or factual verification.
+Collect conservative continuation and contamination signals:
+
+```bash
+python skills/project-documentation/scripts/repository_diagnostics.py --root . --format markdown
+```
+
+Known legacy or project-specific names can be supplied with repeated `--marker` arguments. Diagnostic output should normally stay under `.project-documentation/`, which is ignored by version control.
+
+These scripts assist the agent. They do not replace source inspection, factual verification, language-specific static analysis, secret scanning, or security review.
 
 ## Design principles
 
@@ -192,7 +225,7 @@ Reuse notes identify portable behavior, boundaries, assumptions, dependencies, a
 
 ## Status
 
-Version 0.1.0 is the first working implementation of the skill architecture and deterministic helper scripts.
+Version 0.2.0 adds internal project reconciliation, continuation analysis, project-contamination analysis, safe diagnostic output, and conservative repository diagnostic signals.
 
 ## License
 

@@ -51,3 +51,27 @@ Fail when routine synchronization rewrites the entire documentation set without 
 ## Skill profile
 
 For skill or plugin repositories, pass when trigger contract, workflows, resources, packaging, portability, and limitations are documented.
+
+## Reconciliation quality
+
+Pass when accepted planning evidence is distinguished from brainstorming, current implementation is independently verified, deltas are classified consistently, and unknown rationale remains unknown.
+
+Fail when historical intent is presented as current behavior or when the agent invents reasons for divergence.
+
+## Continuation audit quality
+
+Pass when residue findings identify evidence, confidence, change risk, and dynamic-use uncertainty.
+
+Fail when an unreferenced file is automatically labeled obsolete or when diagnostic findings are treated as direct change instructions.
+
+## Project contamination quality
+
+Pass when project-specific, user-specific, environment-specific, and example-derived context is separated from reusable logic and findings explain whether configuration or data extraction may be appropriate.
+
+Fail when intentional project identity is automatically labeled contamination or when example-derived assumptions remain embedded without review.
+
+## Sensitive-data handling
+
+Pass when credential-like or private values are redacted from generated reports and only their category and location are recorded.
+
+Fail when a discovered credential-like literal is copied into documentation or diagnostic JSON.

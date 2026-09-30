@@ -24,6 +24,9 @@ README недостаточно для сохранения знаний о пр
 - сопровождения
 - аудита документации
 - подготовки релиза
+- внутреннего сравнения исходного плана с фактической реализацией
+- проверки проекта перед продолжением разработки
+- поиска случайных привязок к старым проектам, примерам и пользовательскому контексту
 - работы AI-агентов
 - передачи проекта другому разработчику
 - повторного использования решений в новых проектах
@@ -43,7 +46,11 @@ Repository
 |   |-- архитектура
 |   |-- описание реализации
 |   |-- разработка и эксплуатация
-|   `-- заметки для повторного использования
+|   |-- заметки для повторного использования
+|   `-- при необходимости история plan vs implementation
+|
+|-- Local diagnostics
+|   `-- .project-documentation/
 |
 `-- Optional agent routing
     `-- указатели из AGENTS.md или CLAUDE.md
@@ -66,7 +73,11 @@ Repository
 - точечное обновление документации после изменений кода
 - проверка документации перед релизом
 - специальный профиль для Agent Skills и plugins
-- детерминированные вспомогательные скрипты для инвентаризации и проверки Markdown
+- внутренний reconcile исходного плана и фактической реализации
+- continuation audit для поиска следов отпавших и незавершенных решений
+- contamination audit для поиска случайных привязок к прошлым проектам, примерам, пользователям и окружениям
+- безопасное редактирование credential-like значений в диагностике
+- детерминированные вспомогательные скрипты для инвентаризации, проверки Markdown и диагностических сигналов
 
 ## Режимы
 
@@ -94,6 +105,15 @@ extract
 
 skill-docs
   Документирование Agent Skill или plugin-репозитория
+
+reconcile
+  Сравнение принятого плана проекта с текущей реализацией
+
+continuation
+  Поиск следов старых, отпавших или незавершенных решений
+
+contamination
+  Поиск случайной привязки к предыдущим проектам, пользователям, окружениям и примерам
 ```
 
 ## Документирование skills
@@ -130,9 +150,14 @@ skills/
       quality-gates.md
       repository-analysis.md
       skill-profile.md
+      evolution-reconciliation.md
+      continuation-audit.md
+      contamination-audit.md
+      diagnostic-output.md
     scripts/
       repository_inventory.py
       documentation_audit.py
+      repository_diagnostics.py
 
 plugin.json
 .claude-plugin/
@@ -153,7 +178,15 @@ python skills/project-documentation/scripts/repository_inventory.py --root . --f
 python skills/project-documentation/scripts/documentation_audit.py --root .
 ```
 
-Скрипты помогают агенту, но не заменяют анализ исходного кода и проверку фактов.
+Сбор консервативных сигналов для continuation и contamination audit:
+
+```bash
+python skills/project-documentation/scripts/repository_diagnostics.py --root . --format markdown
+```
+
+Известные названия старых проектов, клиентов или источников можно передавать повторяющимся аргументом `--marker`. Диагностические результаты по умолчанию должны оставаться в `.project-documentation/`, который исключен из Git.
+
+Скрипты помогают агенту, но не заменяют анализ исходного кода, language-specific static analysis, secret scanning и security review.
 
 ## Принципы
 
@@ -179,7 +212,7 @@ Reuse notes описывают переносимое поведение, гра
 
 ## Статус
 
-Версия 0.1.0 является первой рабочей реализацией архитектуры навыка и вспомогательных скриптов.
+Версия 0.2.0 добавляет внутреннее сравнение плана и реализации, continuation audit, project contamination audit, безопасные локальные диагностические отчеты и новый вспомогательный scanner сигналов.
 
 ## Лицензия
 

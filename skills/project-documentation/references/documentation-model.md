@@ -65,6 +65,10 @@ docs/
     DEPENDENCIES.md
   decisions/
     <recorded-decision>.md
+  evolution/
+    BASELINE.md
+    TRACEABILITY.md
+    IMPLEMENTATION_REVIEW.md
 ```
 
 Only create documents with real content.
@@ -100,3 +104,22 @@ Capability index: docs/CAPABILITIES.md
 ```
 
 Project-local instructions remain authoritative.
+
+## Internal evolution layer
+
+When credible planning evidence exists and reconciliation is useful, `docs/evolution/` may contain durable internal records of what was intended, what exists now, and how the implementation diverged.
+
+This layer is not part of the default public project presentation. Do not expose it from README merely because it exists.
+
+## Local diagnostic layer
+
+Continuation and contamination analysis should normally write temporary or potentially sensitive findings outside tracked documentation:
+
+```text
+.project-documentation/
+  continuation-report.md
+  contamination-report.md
+  findings.json
+```
+
+The diagnostic directory should normally be ignored by version control. Promote only durable and safe conclusions into tracked `docs/`.
