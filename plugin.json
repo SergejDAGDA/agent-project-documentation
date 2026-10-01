@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "project-documentation",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Repository documentation and reusable knowledge extraction with audit-first routing, semantic coordination ownership, reconciliation, continuation, contamination, update, release, and Agent Skill workflows.",
   "author": {
     "name": "Sergej DAGDA",

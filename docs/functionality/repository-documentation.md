@@ -20,6 +20,7 @@ Structural helpers are covered by unit tests in `tests/`.
 - repository-local instructions when present
 - existing maintained documentation when present
 - source code, tests, configuration, schemas, manifests, and related project evidence
+- external operational evidence supplied by the user or observed directly in the current task when materially relevant
 - project-memory or coordination artifacts only when required by local instructions or materially relevant
 - a user intent such as initial documentation, audit, update, release check, presentation work, or knowledge extraction
 
@@ -37,6 +38,7 @@ Depending on repository needs and requested mode:
 - audit findings
 - out-of-scope coordination findings
 - completion evidence describing verified and unresolved areas
+- explicit evidence provenance, confidence, temporal role, or revision/state identity when those distinctions materially affect a claim
 
 ### Modes
 
@@ -48,9 +50,24 @@ Mode selection is intent-driven rather than tied to a required command syntax. A
 
 The workflow groups meaningful behavior into capabilities instead of treating every source file or framework component as a separate feature.
 
-Capabilities can be marked `verified`, `partial`, or `unverified` based on current repository evidence.
+Capabilities can be marked `verified`, `partial`, or `unverified` based on evidence appropriate to the claim domain.
+
+Those values describe verification confidence. Historical or proposed/planned state is a separate temporal role.
 
 `unverified` behavior must not be presented as implemented.
+
+### Evidence semantics
+
+When a claim crosses repository, runtime, or time boundaries, the workflow keeps separate:
+
+- evidence provenance
+- verification confidence
+- temporal role
+- materially distinct revision or state identities
+
+Repository HEAD, implementation/source baseline, released or deployed source revision, artifact/build identity, runtime identity, and documentation/coordination revision may differ without constituting drift by themselves.
+
+Authority is determined per claim domain. A repository, runtime record, historical marker, or coordination snapshot can be valid evidence without being authoritative for the same thing.
 
 ### Adaptive structure
 
@@ -68,9 +85,11 @@ Broken links or stale statements inside those artifacts are reported rather than
 
 ### Failure and uncertainty behavior
 
-When code, tests, existing docs, or configuration conflict, the workflow reports the disagreement instead of silently converting one version into fact.
+When code, tests, existing docs, configuration, external operational evidence, or coordination evidence conflict, the workflow reports the disagreement instead of silently converting one version into fact.
 
-Unknown historical rationale must remain unknown unless supported by repository evidence.
+Unknown historical rationale must remain unknown unless supported by evidence.
+
+The workflow must not imply that an external system was independently checked in the current task when the evidence was only supplied by the user or inherited from prior coordination material.
 
 ## Current implementation
 
@@ -83,6 +102,7 @@ Defines purpose, modes, discovery, capability analysis, output rules, coordinati
 ### Supporting references
 
 - `documentation-model.md` defines presentation and internal documentation levels
+- `evidence-semantics.md` defines evidence provenance, verification confidence, temporal role, revision/state identity, and authority by claim domain
 - `repository-analysis.md` defines broad-to-narrow repository discovery
 - `feature-documentation.md` defines capability documentation and reuse notes
 - `quality-gates.md` defines acceptance checks
@@ -104,11 +124,12 @@ The helpers do not generate project prose and do not replace agent reasoning.
 
 ## Reuse notes
 
-The core reusable idea is the separation of three concerns:
+The core reusable idea is the separation of four concerns:
 
 1. source-grounded capability discovery
 2. functional contract independent from implementation
 3. current implementation map with explicit reuse boundaries
+4. evidence semantics that keep provenance, confidence, temporal role, and materially distinct identities separate when needed
 
 A future implementation can replace the helper scripts, agent platform, or packaging while preserving this contract.
 
