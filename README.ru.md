@@ -77,6 +77,7 @@ Repository
 - привязка поведения к текущей реализации
 - извлечение переиспользуемых решений
 - статусы доказательности verified, partial и unverified
+- разделение происхождения evidence и временной идентичности, когда утверждения пересекают границы repository, runtime или истории
 - аудит документации
 - точечное обновление документации после изменений кода
 - проверка документации перед релизом
@@ -244,6 +245,7 @@ skills/
       openai.yaml
     references/
       documentation-model.md
+      evidence-semantics.md
       feature-documentation.md
       quality-gates.md
       repository-analysis.md
@@ -298,7 +300,7 @@ python skills/project-documentation/scripts/repository_diagnostics.py --root . -
 
 ### Сначала доказательства
 
-Важные утверждения документации должны опираться на актуальное содержимое репозитория.
+Важные утверждения документации должны опираться на evidence, подходящее для соответствующей области утверждения. Если происхождение, степень проверки, временная роль или revision identity существенно влияют на смысл, эти измерения нужно указывать явно и не приписывать проверку, которой не было.
 
 ### Сначала поведение, потом реализация
 
@@ -322,7 +324,7 @@ Reuse notes описывают переносимое поведение, гра
 
 ## Статус
 
-Версия 0.2.2 уточняет семантическое распознавание coordination artifacts, исключает их из обычного Markdown audit по умолчанию и запускает repository diagnostics только в режимах, которым действительно нужны эвристические residue или contamination сигналы.
+Версия 0.2.3 уточняет происхождение внешнего evidence, отделяет verification confidence от temporal role и не позволяет сводить разные repository, implementation, release/runtime и documentation identities к одному неоднозначному `current revision`.
 
 ## Лицензия
 

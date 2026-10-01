@@ -23,7 +23,8 @@ Detailed functional, architectural, development, reference, and reuse documentat
 - remain independent from a specific product or legacy project
 - work across languages and frameworks
 - avoid template-driven empty documentation
-- ground important claims in current repository evidence
+- ground important claims in evidence appropriate to their claim domain
+- preserve provenance, verification confidence, temporal role, and materially distinct revision or state identities when those distinctions affect truth
 - preserve authored documentation when possible
 - extract capabilities rather than merely listing files
 - separate functional contracts from current implementation

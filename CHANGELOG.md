@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.3
+
+Evidence semantics and temporal identity clarification release.
+
+- Separate evidence provenance, verification confidence, and temporal role instead of overloading one status vocabulary
+- Distinguish repository-derived, current-task external, user-supplied, and prior/coordination evidence when that provenance materially affects a claim
+- Clarify that repository HEAD, implementation/source baseline, released or deployed source revision, artifact/build identity, runtime identity, and documentation/coordination revision may differ
+- Define authority per materially distinct claim domain instead of imposing one global operational authority
+- Normalize continuation findings on the canonical `verified` / `partial` / `unverified` confidence vocabulary and keep `historical` as a temporal role
+- Add cross-cutting evidence semantics guidance and regression coverage for the new contract
+
 ## 0.2.2
 
 Coordination ownership and helper-routing refinement release.

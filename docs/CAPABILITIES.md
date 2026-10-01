@@ -24,6 +24,14 @@ Supports audit, targeted update, and release documentation workflows with source
 
 Canonical documentation: `functionality/repository-documentation.md`
 
+## Evidence provenance and temporal identity
+
+Status: verified
+
+Keeps evidence provenance, verification confidence, temporal role, and materially distinct repository, implementation, release/runtime, and documentation identities separate when collapsing them would make a claim ambiguous or false.
+
+Canonical documentation: `functionality/repository-documentation.md`
+
 ## Agent Skill documentation
 
 Status: verified

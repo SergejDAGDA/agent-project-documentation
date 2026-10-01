@@ -6,6 +6,8 @@ Compare evidenced project intent with the current implementation without turning
 
 Use this reference for `reconcile` mode and when a full internal documentation pass has credible planning material.
 
+Read `evidence-semantics.md` when provenance, confidence, temporal role, or revision identity materially affects a reconciliation claim.
+
 ## Evidence groups
 
 Keep three evidence groups distinct.
@@ -67,5 +69,7 @@ For each material item capture:
 - observed delta
 - evidenced evolution context
 - unknowns
+
+When external, coordination, or time-sensitive evidence materially affects the result, also record the relevant evidence provenance, verification confidence, temporal role, and precise revision/state identity instead of collapsing them into a generic current state.
 
 Keep `unknown` explicit instead of manufacturing rationale.

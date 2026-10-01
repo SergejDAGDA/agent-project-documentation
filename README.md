@@ -76,6 +76,7 @@ The generated structure is adaptive. The skill does not create empty API, databa
 - implementation mapping
 - reusable knowledge extraction
 - verified, partial, and unverified evidence states
+- evidence provenance and temporal identity separation when claims cross repository, runtime, or history boundaries
 - documentation audit
 - targeted documentation updates after code changes
 - release documentation checks
@@ -245,6 +246,7 @@ skills/
       openai.yaml
     references/
       documentation-model.md
+      evidence-semantics.md
       feature-documentation.md
       quality-gates.md
       repository-analysis.md
@@ -309,7 +311,7 @@ These scripts assist the agent. They do not replace source inspection, factual v
 
 ### Evidence before prose
 
-Important documentation claims should be supported by current repository evidence.
+Important documentation claims should be supported by evidence appropriate to their claim domain. When provenance, confidence, time, or revision identity materially affects the claim, keep those dimensions explicit rather than implying more verification than occurred.
 
 ### Behavior before implementation
 
@@ -333,7 +335,7 @@ Reuse notes identify portable behavior, boundaries, assumptions, dependencies, a
 
 ## Status
 
-Version 0.2.2 refines semantic coordination-artifact ownership, excludes coordination material from the ordinary Markdown audit by default, and gates repository diagnostics to modes that actually need heuristic residue or contamination signals.
+Version 0.2.3 clarifies external evidence provenance, separates verification confidence from temporal role, and prevents materially different repository, implementation, release/runtime, and documentation identities from being collapsed into one ambiguous current revision.
 
 ## License
 

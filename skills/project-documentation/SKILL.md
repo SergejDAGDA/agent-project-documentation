@@ -28,6 +28,10 @@ Separate product or functional behavior from the current implementation so that 
 
 Project-local instructions, source code, tests, configuration, existing documentation, schemas, and explicitly recorded decisions are authoritative within their scope.
 
+Authority follows the claim domain. Repository implementation, external operational state, persistent data, accepted decisions, and coordination state may have different authoritative sources. Physical location, recency, or a generic `current` marker does not establish authority by itself.
+
+When materially important claims cross repository, runtime, or time boundaries, keep evidence provenance, verification confidence, and temporal role separate. Do not imply independent external verification when the current task did not perform it. Read `references/evidence-semantics.md`.
+
 When sources disagree, report the conflict instead of silently choosing the most convenient version.
 
 Do not overwrite deliberate project documentation merely to force a preferred template.
@@ -203,6 +207,8 @@ Assign an evidence state:
 - `partial` when only part of the described behavior is implemented or evidence is incomplete
 - `unverified` when a claim exists in documentation, comments, or plans but current implementation was not found
 
+These are verification-confidence values. Keep temporal roles such as `historical` or `proposed/planned` separate.
+
 Never present `unverified` behavior as implemented.
 
 ## Phase 3: Design an adaptive documentation set
@@ -250,7 +256,7 @@ Prefer an existing README structure when it is already deliberate and usable.
 
 Improve inaccurate, incomplete, or difficult-to-navigate sections without turning the README into internal engineering documentation.
 
-Presentation claims must be traceable to current repository evidence.
+Presentation claims must be traceable to evidence appropriate to their claim domain. Implementation claims should be traceable to current repository evidence.
 
 ## Phase 5: Build the internal layer
 
@@ -346,7 +352,15 @@ Read `references/skill-profile.md`.
 
 ## Phase 8: Verification
 
-Every important factual claim should be supported by repository evidence.
+Every important factual claim should be supported by evidence appropriate to its claim domain. Repository implementation claims should be grounded in current repository evidence.
+
+External operational claims may rely on evidence verified directly in the current task, evidence explicitly supplied by the user, or prior/coordination evidence. Make provenance clear when the distinction matters, and never state or imply that an external system was independently checked when it was not.
+
+Repository HEAD, implementation or source baseline, released or deployed source revision, artifact or build identity, runtime identity, and documentation or coordination revision may differ. Do not collapse materially distinct identities into one generic `current revision` when doing so would make a claim false or ambiguous.
+
+For each materially distinct state or claim domain, identify its authoritative source when authority matters. Historical markers, coordination snapshots, runtime records, and repository state may all be valid evidence without being authoritative for the same domain.
+
+Read `references/evidence-semantics.md` for provenance, confidence, temporal role, identity, and authority semantics.
 
 Prefer source references that remain useful to future maintainers, such as repository-relative paths and relevant symbols or headings. Avoid fragile absolute line numbers as the only reference because they drift quickly.
 
@@ -378,6 +392,8 @@ For update mode, use version control history or a diff when available to focus t
 Before completion, read `references/quality-gates.md` and check:
 
 - factual grounding
+- evidence provenance and authority by claim domain when materially relevant
+- temporal identity separation when materially relevant
 - capability coverage
 - separation of functional contract from implementation
 - presentation clarity
@@ -388,7 +404,7 @@ Before completion, read `references/quality-gates.md` and check:
 - portability of reusable knowledge
 - skill profile coverage when applicable
 - plan-versus-implementation traceability when reconciliation is requested
-- conservative continuation findings with explicit confidence
+- conservative continuation findings with canonical verification confidence
 - contamination findings that separate reusable logic from project-specific context
 - sensitive literal redaction in diagnostics
 - semantic ownership boundaries for coordination and project-memory artifacts
@@ -410,6 +426,7 @@ Report:
 - reconciliation states when requested
 - continuation or contamination findings when requested
 - `Out-of-scope coordination findings` when relevant
+- evidence provenance, verification confidence, temporal role, or precise revision/state identity when materially relevant
 - validation scripts or tests actually run
 - unresolved documentation gaps
 

@@ -2,9 +2,29 @@
 
 ## Grounding
 
-Pass when important claims can be traced to current repository evidence.
+Pass when important claims can be traced to evidence appropriate to their claim domain.
 
-Fail when planned, commented, or historical behavior is presented as currently implemented without qualification.
+Repository implementation claims should be grounded in current repository evidence. External operational claims may rely on current-task external observation, user-supplied evidence, or prior coordination evidence when provenance is clear enough for the reader to understand what was and was not independently checked.
+
+Fail when planned, commented, historical, or externally supplied behavior is presented as currently implemented or independently verified without qualification.
+
+## Evidence provenance
+
+Pass when evidence provenance is made explicit whenever the difference between repository-derived, current-task external, user-supplied, or prior/coordination evidence materially affects the truth of a claim.
+
+Fail when documentation implies that an external system was checked in the current task when the claim was only supplied by the user or inherited from prior coordination evidence.
+
+## Temporal identity
+
+Pass when materially distinct repository, implementation, release or deployment, artifact/build, runtime, and documentation/coordination identities remain distinct where the difference matters.
+
+Fail when several different identities are collapsed into one generic `current revision` and that wording can become false or ambiguous as repository history advances.
+
+## Authority by claim domain
+
+Pass when the authoritative source for each materially distinct claim domain is clear when authority matters.
+
+Fail when historical markers, coordination snapshots, runtime records, and repository state silently compete as if they were authoritative for the same domain, or when physical location or recency alone is treated as proof of authority.
 
 ## Coverage
 
@@ -94,9 +114,9 @@ Fail when historical intent is presented as current behavior or when the agent i
 
 ## Continuation audit quality
 
-Pass when residue findings identify evidence, confidence, change risk, and dynamic-use uncertainty.
+Pass when residue findings identify evidence, canonical verification confidence, change risk, and dynamic-use uncertainty, with temporal role kept separate when relevant.
 
-Fail when an unreferenced file is automatically labeled obsolete or when diagnostic findings are treated as direct change instructions.
+Fail when an unreferenced file is automatically labeled obsolete, when `historical` is treated as a confidence value, or when diagnostic findings are treated as direct change instructions.
 
 ## Project contamination quality
 
