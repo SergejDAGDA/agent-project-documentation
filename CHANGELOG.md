@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.5
+
+Pre-commit Markdown hygiene for durable project knowledge.
+
+- Require authored Markdown to have a single final newline, no blank lines at EOF, and no trailing whitespace before local Git checkpoints
+- Add optional read-only `documentation_audit.py --check-git-whitespace` detection of violations in new/untracked Markdown, while preserving existing audit behavior and scope by default
+- Cover extra EOF blank lines, trailing spaces, missing final newlines, clean CRLF, and excluded project-memory artifacts with regression tests
+- Keep changes scoped to project documentation; do not rewrite legacy files or bypass Git staging checks
+
 ## 0.2.4
 
 Project-local documentation ownership and installed-version traceability.

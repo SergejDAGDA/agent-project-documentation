@@ -88,15 +88,23 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("temporary", gates)
         self.assertIn("reusable/", model)
 
+    def test_generated_markdown_requires_git_whitespace_gate(self):
+        skill = SKILL.read_text(encoding="utf-8")
+        gates = GATES.read_text(encoding="utf-8")
+        self.assertIn("--check-git-whitespace", skill)
+        self.assertIn("--check-git-whitespace", gates)
+        self.assertIn("git diff --cached --check", gates)
+        self.assertIn("untracked", skill)
+
     def test_release_version_metadata_is_consistent(self):
         plugin_version = json.loads(PLUGIN.read_text(encoding="utf-8"))["version"]
         claude_version = json.loads(CLAUDE_PLUGIN.read_text(encoding="utf-8"))["version"]
-        self.assertEqual(plugin_version, "0.2.4")
+        self.assertEqual(plugin_version, "0.2.5")
         self.assertEqual(VERSION_FILE.read_text(encoding="utf-8").strip(), plugin_version)
         self.assertEqual(claude_version, plugin_version)
-        self.assertIn("## 0.2.4", CHANGELOG.read_text(encoding="utf-8"))
-        self.assertIn("Version 0.2.4", README.read_text(encoding="utf-8"))
-        self.assertIn("Версия 0.2.4", README_RU.read_text(encoding="utf-8"))
+        self.assertIn("## 0.2.5", CHANGELOG.read_text(encoding="utf-8"))
+        self.assertIn("Version 0.2.5", README.read_text(encoding="utf-8"))
+        self.assertIn("Версия 0.2.5", README_RU.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

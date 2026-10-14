@@ -71,6 +71,21 @@ with arbitrary top-level folder names, use `--all-markdown`. Fail when
 `0 errors` results from checking only the export README or when portable
 links rely on inaccessible machine-specific absolute paths.
 
+## Git-compatible Markdown output
+
+For write-capable documentation work, pass only when the authored Markdown
+files end with **one** newline and contain no extra blank lines at EOF or
+trailing spaces/tabs. Run `documentation_audit.py --check-git-whitespace`
+against the intended documentation surface; add `--all-markdown` for
+nonstandard export trees. This catches newly created untracked files that
+`git diff --check` cannot inspect. A later `git diff --cached --check`
+remains the Git owner's responsibility.
+
+Fail when generated Markdown would produce `new blank line at EOF` or
+`trailing whitespace` on staging. Do not rewrite unrelated existing files,
+change line ending conventions, or bypass Git's safety gate solely to make
+an unrelated check pass. Read-only audit mode does not modify whitespace.
+
 ## Navigation
 
 Pass when public documentation points to deeper material and internal documents have clear canonical locations.
