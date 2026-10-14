@@ -118,7 +118,7 @@ Project-local instructions remain authoritative.
 
 ## Internal evolution layer
 
-When credible planning evidence exists and reconciliation is useful, `docs/evolution/` may contain durable internal records of what was intended, what exists now, and how the implementation diverged.
+When credible planning evidence exists and reconciliation is useful, `docs/project-knowledge/evolution/` (or an existing project-owned evolution path) may contain durable internal records of what was intended, what exists now, and how the implementation diverged.
 
 This layer is not part of the default public project presentation. Do not expose it from README merely because it exists.
 
