@@ -1,5 +1,7 @@
 import importlib.util
 import tempfile
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -173,6 +175,28 @@ class DocumentationAuditTests(unittest.TestCase):
             )
             self.assertEqual(errors, [])
             self.assertTrue(any("project-memory/STATUS.md" in x for x in broad_errors))
+
+    def test_cli_git_whitespace_flag_rejects_new_untracked_document(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_bytes(b"# Demo\n")
+            docs = root / "docs" / "project-knowledge"
+            docs.mkdir(parents=True)
+            (docs / "README.md").write_bytes(b"# Knowledge\r\n\r\n")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--root",
+                    str(root),
+                    "--check-git-whitespace",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("extra blank line at EOF", result.stdout)
 
     def test_project_memory_directory_is_outside_default_audit(self):
         with tempfile.TemporaryDirectory() as tmp:
