@@ -1,5 +1,7 @@
 import importlib.util
 import tempfile
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -125,6 +127,76 @@ class DocumentationAuditTests(unittest.TestCase):
             all_errors, _ = module.audit(root, all_markdown=True)
             self.assertEqual(normal_errors, [])
             self.assertTrue(any("reusable-knowledge/contracts/broken.md" in e for e in all_errors))
+
+    def test_git_whitespace_check_catches_extra_blank_line_at_eof(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_bytes(b"# Demo\n")
+            target = root / "docs" / "project-knowledge" / "CAPABILITIES.md"
+            target.parent.mkdir(parents=True)
+            target.write_bytes(b"# Capabilities\n\nText\n\n")
+            ordinary_errors, _ = module.audit(root)
+            checked_errors, _ = module.audit(root, check_git_whitespace=True)
+            self.assertEqual(ordinary_errors, [])
+            self.assertTrue(any("extra blank line at EOF" in x for x in checked_errors))
+
+    def test_git_whitespace_check_catches_trailing_spaces_and_missing_newline(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_bytes(b"# Demo\n")
+            doc = root / "docs" / "project-knowledge" / "README.md"
+            doc.parent.mkdir(parents=True)
+            doc.write_bytes(b"# Knowledge\nBad line  \nLast line")
+            errors, _ = module.audit(root, check_git_whitespace=True)
+            self.assertTrue(any("trailing whitespace" in x for x in errors))
+            self.assertTrue(any("missing final newline" in x for x in errors))
+
+    def test_git_whitespace_check_accepts_clean_crlf_without_reformatting(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_bytes(b"# Demo\r\n")
+            doc = root / "docs" / "project-knowledge" / "README.md"
+            doc.parent.mkdir(parents=True)
+            doc.write_bytes(b"# Knowledge\r\n\r\nBody\r\n")
+            errors, warnings = module.audit(root, check_git_whitespace=True)
+            self.assertEqual(errors, [])
+            self.assertEqual(warnings, [])
+
+    def test_git_whitespace_check_preserves_default_documentation_scope(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_bytes(b"# Demo\n")
+            memory = root / "docs" / "project-memory"
+            memory.mkdir(parents=True)
+            (memory / "STATUS.md").write_bytes(b"# Status\n\n")
+            errors, _ = module.audit(root, check_git_whitespace=True)
+            broad_errors, _ = module.audit(
+                root, all_markdown=True, check_git_whitespace=True
+            )
+            self.assertEqual(errors, [])
+            self.assertTrue(any("project-memory/STATUS.md" in x for x in broad_errors))
+
+    def test_cli_git_whitespace_flag_rejects_new_untracked_document(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_bytes(b"# Demo\n")
+            docs = root / "docs" / "project-knowledge"
+            docs.mkdir(parents=True)
+            (docs / "README.md").write_bytes(b"# Knowledge\r\n\r\n")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--root",
+                    str(root),
+                    "--check-git-whitespace",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("extra blank line at EOF", result.stdout)
 
     def test_project_memory_directory_is_outside_default_audit(self):
         with tempfile.TemporaryDirectory() as tmp:

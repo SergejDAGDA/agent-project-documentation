@@ -213,6 +213,16 @@ external export with custom top-level folders, use
 *every* exported Markdown document is included, not just a root README.
 Avoid machine-specific absolute paths in portable Markdown links.
 Inspect and correct any broken local targets before reporting completion.
+For **write-capable Markdown outputs**, enforce a single final newline and no
+trailing blank lines or trailing spaces/tabs in authored lines. Before handing
+files to a local Git checkpoint, run the same documentation audit with
+`--check-git-whitespace` (and `--all-markdown` for external exports);
+do not rely on plain `git diff --check` for newly created, still-untracked
+documents. Correct only Markdown files authored or explicitly approved in the
+current task; treat pre-existing failures elsewhere as separate findings, not
+permission for unrelated formatting or CRLF/LF conversion. The audit is
+read-only and never edits files. Never disable or bypass a later
+`git diff --cached --check` safety gate to declare success.
 Report the location and number of files actually audited; do not interpret
 `0 errors` as complete coverage when files were excluded.
 
@@ -459,7 +469,9 @@ Before completion, read `references/quality-gates.md` and check:
 - absence of unnecessary helper probing
 - mode-appropriate helper execution
 
-Run `scripts/documentation_audit.py` when local execution is available.
+Run `scripts/documentation_audit.py` when local execution is available;
+for generated/updated Markdown also run it with `--check-git-whitespace`
+before declaring the documentation work complete.
 
 ## Completion evidence
 

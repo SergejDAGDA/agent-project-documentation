@@ -328,7 +328,11 @@ Validate all project-local Markdown links using
 exports with custom top-level folders, use
 `documentation_audit.py --root <export-root> --all-markdown` to include
 every exported Markdown file. The audit checks Markdown links and basic
-structure, not deep semantic agreement with source code.
+structure, not deep semantic agreement with source code. For authored
+Markdown, run the audit with `--check-git-whitespace` before handoff to
+local Git: this rejects trailing spaces, extra empty lines at EOF, and
+missing final newlines, even for new untracked documents. Fix only
+task-owned files; do not globally reformat existing documentation.
 
 The installed skill folder contains a `VERSION` file, which must match the
 plugin manifests. This enables local version checks without an updater.
@@ -361,9 +365,9 @@ Reuse notes identify portable behavior, boundaries, assumptions, dependencies, a
 
 ## Status
 
-Version 0.2.4 adds a project-local durable documentation default,
-installed-skill version marker, and explicit full-export link-audit scope.
-It preserves existing documentation trees instead of migrating them.
+Version 0.2.5 adds an opt-in Git-whitespace check that is required for
+authored Markdown before handoff to local version control. It preserves
+normal read-only audit behavior and never reformats unrelated files.
 
 ## License
 

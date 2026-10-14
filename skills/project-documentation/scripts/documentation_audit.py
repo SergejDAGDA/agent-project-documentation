@@ -163,7 +163,11 @@ def normalized_target(source: Path, raw_target: str) -> Path | None:
     return (source.parent / target).resolve()
 
 
-def audit(root: Path, all_markdown: bool = False) -> tuple[list[str], list[str]]:
+def audit(
+    root: Path,
+    all_markdown: bool = False,
+    check_git_whitespace: bool = False,
+) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
     files = markdown_files(root, all_markdown=all_markdown)
@@ -174,6 +178,17 @@ def audit(root: Path, all_markdown: bool = False) -> tuple[list[str], list[str]]
     for path in files:
         text = path.read_text(encoding="utf-8", errors="replace")
         rel = path.relative_to(root).as_posix()
+        if check_git_whitespace:
+            raw = path.read_bytes()
+            if raw and not raw.endswith(b"\n"):
+                errors.append(f"{rel}: missing final newline")
+            if re.search(rb"(?:\r?\n){2}$", raw):
+                errors.append(f"{rel}: extra blank line at EOF (git diff --check)")
+            for line_number, line in enumerate(raw.splitlines(), 1):
+                if line.endswith((b" ", b"\t")):
+                    errors.append(
+                        f"{rel}:{line_number}: trailing whitespace (git diff --check)"
+                    )
         if text.strip() and not HEADING.search(text) and path.name.upper() not in {"LICENSE.MD"}:
             warnings.append(f"{rel}: no Markdown heading detected")
 
@@ -215,10 +230,19 @@ def main() -> int:
         action="store_true",
         help="Audit every Markdown file instead of documentation surfaces only",
     )
+    parser.add_argument(
+        "--check-git-whitespace",
+        action="store_true",
+        help="Fail on Markdown trailing whitespace, extra blank lines at EOF, or missing final newline",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
-    errors, warnings = audit(root, all_markdown=args.all_markdown)
+    errors, warnings = audit(
+        root,
+        all_markdown=args.all_markdown,
+        check_git_whitespace=args.check_git_whitespace,
+    )
 
     for message in warnings:
         print(f"WARN: {message}")
