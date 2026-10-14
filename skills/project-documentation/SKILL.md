@@ -357,7 +357,7 @@ When credible planning material exists, compare accepted intent with the current
 
 Keep planning, implementation, and evolution evidence separate. Use the states defined in `references/evolution-reconciliation.md`. Never invent why a planned item changed.
 
-Tracked reconciliation documentation may live under `docs/evolution/` when it is durable and useful to maintainers. Keep it out of the public README by default.
+Tracked reconciliation documentation defaults to `docs/project-knowledge/evolution/` for new projects, or the established project-owned evolution location when one already exists. Keep it out of the public README by default.
 
 ### Continuation audit
 
