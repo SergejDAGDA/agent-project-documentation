@@ -44,38 +44,49 @@ Recommended adaptive structure:
 
 ```text
 docs/
-  CAPABILITIES.md
-  overview/
-    PROJECT.md
-  functionality/
-    <capability>.md
-  architecture/
-    OVERVIEW.md
-    COMPONENTS.md
-    DATA_FLOW.md
-  development/
-    SETUP.md
-    BUILD.md
-    TESTING.md
-    DEPLOYMENT.md
-  reference/
-    DATA_MODEL.md
-    API.md
-    CONFIGURATION.md
-    DEPENDENCIES.md
-  decisions/
-    <recorded-decision>.md
-  evolution/
-    BASELINE.md
-    TRACEABILITY.md
-    IMPLEMENTATION_REVIEW.md
+  project-knowledge/
+    README.md
+    CAPABILITIES.md
+    overview/
+      PROJECT.md
+    functionality/
+      <capability>.md
+    architecture/
+      OVERVIEW.md
+      COMPONENTS.md
+      DATA_FLOW.md
+    development/
+      SETUP.md
+      BUILD.md
+      TESTING.md
+      DEPLOYMENT.md
+    reference/
+      DATA_MODEL.md
+      API.md
+      CONFIGURATION.md
+      DEPENDENCIES.md
+    reusable/
+      <portable-capability>.md
+    evolution/
+      BASELINE.md
+      TRACEABILITY.md
+      IMPLEMENTATION_REVIEW.md
 ```
 
-Only create documents with real content.
+Only create documents with real content. This is the **default for new
+projects**, not a forced migration: preserve an established project-owned
+`docs/` layout or other coherent documentation structure. Permanent
+documentation and reusable knowledge remain in the project repository
+unless an explicit external-only or read-only request forbids writing there.
+Keep `docs/project-memory/` (status, decisions, session log, handoff) and
+deployment operational records separate from the knowledge tree.
 
 ## Capability index
 
-`docs/CAPABILITIES.md` should be the shortest path to reusable knowledge.
+`docs/project-knowledge/CAPABILITIES.md` should be the shortest path to
+reusable knowledge in a newly initialized project. Continue using an
+existing canonical capability index at `docs/CAPABILITIES.md` or elsewhere
+when that is the project's established convention.
 
 For each meaningful capability, record:
 
@@ -96,11 +107,11 @@ Keep routing concise. Do not duplicate the internal documentation inside agent i
 A useful routing pattern is:
 
 ```text
-Product behavior: docs/functionality/
-Architecture: docs/architecture/
-Reference: docs/reference/
-Development: docs/development/
-Capability index: docs/CAPABILITIES.md
+Product behavior: docs/project-knowledge/functionality/
+Architecture: docs/project-knowledge/architecture/
+Reference: docs/project-knowledge/reference/
+Reusable contracts: docs/project-knowledge/reusable/
+Capability index: docs/project-knowledge/CAPABILITIES.md
 ```
 
 Project-local instructions remain authoritative.

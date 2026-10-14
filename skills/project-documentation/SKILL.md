@@ -171,6 +171,51 @@ Do not run `repository_diagnostics.py` as a routine quality gate for `init`, `au
 
 The documentation audit excludes Markdown used as fixture, sample, QA, generated, runtime, project-memory, handoff, checkpoint, and similar coordination material by default. Use `--all-markdown` only when the user explicitly wants every Markdown file audited.
 
+## Canonical output location and lifecycle
+
+For write-capable documentation work (`init`, `internal`, `extract`,
+`reconcile`, and applicable `presentation`/`update`), permanent project
+knowledge belongs **inside the source project's root**. For a new project
+without an established documentation convention, use
+`docs/project-knowledge/` as one coherent, maintained knowledge tree.
+Keep the GitHub-facing `README.md` at the repository root when needed.
+Put reusable capability contracts under
+`docs/project-knowledge/reusable/` rather than in a temporary export.
+
+The project-memory coordination root `docs/project-memory/` and operational
+deployment records are separately owned; do not mix them into project
+knowledge or update them through an ordinary documentation operation.
+If the project already has a deliberate, coherent documentation layout,
+preserve it and integrate there instead of creating a competing root.
+Never migrate or rewrite existing documentation merely to adopt this default.
+
+Before writing, establish the **actual project root**, the chosen durable
+documentation root, existing docs ownership, and where every deliverable
+will be saved. An agent's visualization/cache/session/temp directory is not
+a durable project documentation location. Check that the resolved permanent
+output paths are inside the project root. Do not silently export the only
+copy outside the project.
+
+An external export or read-only out-of-tree snapshot is allowed **only when
+explicitly requested** or when source writes are prohibited. Mark that
+output as a noncanonical snapshot, provide its exact filesystem location,
+and state that it has **not** updated the project's maintained documentation.
+Never violate an explicit no-write instruction merely to create a
+canonical copy. If source documentation is later adopted, check existing
+files and copy only approved changes; no silent overwrites.
+
+After generating documents, verify all authored relative links and source
+references against the chosen output root. Run
+`scripts/documentation_audit.py --root <project-root>` for project-local
+documentation (including `docs/project-knowledge/`). For a deliberately
+external export with custom top-level folders, use
+`scripts/documentation_audit.py --root <export-root> --all-markdown` so that
+*every* exported Markdown document is included, not just a root README.
+Avoid machine-specific absolute paths in portable Markdown links.
+Inspect and correct any broken local targets before reporting completion.
+Report the location and number of files actually audited; do not interpret
+`0 errors` as complete coverage when files were excluded.
+
 ## Phase 1: Repository discovery
 
 Before writing documentation:
@@ -223,13 +268,16 @@ Typical output may include:
 README.md
 
 docs/
-  CAPABILITIES.md
-  overview/
-  functionality/
-  architecture/
-  development/
-  reference/
-  decisions/
+  project-knowledge/
+    README.md
+    CAPABILITIES.md
+    overview/
+    functionality/
+    architecture/
+    development/
+    reference/
+    reusable/
+    evolution/
 ```
 
 Rules:
@@ -429,5 +477,6 @@ Report:
 - evidence provenance, verification confidence, temporal role, or precise revision/state identity when materially relevant
 - validation scripts or tests actually run
 - unresolved documentation gaps
+- canonical project-local output root (or explicit noncanonical external snapshot location), link-check scope, and the number of documents checked
 
 Do not report documentation as complete when known material gaps remain.

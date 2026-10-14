@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.4
+
+Project-local documentation ownership and installed-version traceability.
+
+- Default new durable internal documentation and reusable capability knowledge to the project-owned `docs/project-knowledge/` tree; preserve established layouts and keep project memory/deployment records separate
+- Mark explicitly requested external-only or no-write exports as noncanonical snapshots; never silently store the only copy in an agent cache
+- Document full-tree link checks for out-of-repository exports and add default audit coverage for the new capability-index location
+- Include a `skills/project-documentation/VERSION` marker synchronized to both plugin manifests; add regression tests for output-root and audit contracts
+
+
 ## 0.2.3
 
 Evidence semantics and temporal identity clarification release.

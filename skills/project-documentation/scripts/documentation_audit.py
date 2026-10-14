@@ -184,10 +184,14 @@ def audit(root: Path, all_markdown: bool = False) -> tuple[list[str], list[str]]
             if not target.exists():
                 errors.append(f"{rel}: broken local link -> {match.group(1)}")
 
-    capability_index = root / "docs" / "CAPABILITIES.md"
-    functionality = root / "docs" / "functionality"
-    if functionality.is_dir() and any(functionality.glob("*.md")) and not capability_index.exists():
-        warnings.append("docs/functionality contains capability documents but docs/CAPABILITIES.md is missing")
+    for knowledge_root in (root / "docs" / "project-knowledge", root / "docs"):
+        functionality = knowledge_root / "functionality"
+        capability_index = knowledge_root / "CAPABILITIES.md"
+        if functionality.is_dir() and any(functionality.glob("*.md")) and not capability_index.exists():
+            warnings.append(
+                f"{functionality.relative_to(root).as_posix()} contains capability documents "
+                f"but {capability_index.relative_to(root).as_posix()} is missing"
+            )
 
     skill_files = [path for path in files if path.name == "SKILL.md"]
     for skill in skill_files:
