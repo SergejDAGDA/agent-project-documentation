@@ -53,8 +53,9 @@ Fail when empty or irrelevant template documents are created.
 ## Durable storage and export coverage
 
 Pass when maintained project documentation and reusable knowledge are
-stored in a canonical project-local documentation tree, separate from
-project-memory and deployment operational records. Preserve existing
+stored in a canonical project-local documentation tree (by default
+`docs/project-knowledge/` in new projects), separate from
+`docs/project-memory/` coordination and deployment operational records. Preserve existing
 deliberate layouts; do not create duplicates just to follow a template.
 
 An explicit external-only or read-only export is allowed, but it must be
