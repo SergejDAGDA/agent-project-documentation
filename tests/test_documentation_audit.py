@@ -91,6 +91,41 @@ class DocumentationAuditTests(unittest.TestCase):
             self.assertEqual(errors, [])
             self.assertEqual(warnings, [])
 
+    def test_project_knowledge_subtree_is_audited_by_default(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Project\n", encoding="utf-8")
+            knowledge = root / "docs" / "project-knowledge" / "reusable"
+            knowledge.mkdir(parents=True)
+            (knowledge / "contract.md").write_text(
+                "# Contract\n\n[Missing](missing.md)\n", encoding="utf-8"
+            )
+            errors, _ = module.audit(root)
+            self.assertTrue(any("docs/project-knowledge/reusable/contract.md" in e for e in errors))
+
+    def test_project_knowledge_missing_capability_index_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Project\n", encoding="utf-8")
+            capabilities = root / "docs" / "project-knowledge" / "functionality"
+            capabilities.mkdir(parents=True)
+            (capabilities / "feature.md").write_text("# Feature\n", encoding="utf-8")
+            errors, warnings = module.audit(root)
+            self.assertEqual(errors, [])
+            self.assertTrue(any("docs/project-knowledge/CAPABILITIES.md" in w for w in warnings))
+
+    def test_external_export_requires_all_markdown_to_check_nested_folders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("# Export\n", encoding="utf-8")
+            nested = root / "reusable-knowledge" / "contracts"
+            nested.mkdir(parents=True)
+            (nested / "broken.md").write_text("# Reuse\n\n[Missing](nothing.md)\n", encoding="utf-8")
+            normal_errors, _ = module.audit(root)
+            all_errors, _ = module.audit(root, all_markdown=True)
+            self.assertEqual(normal_errors, [])
+            self.assertTrue(any("reusable-knowledge/contracts/broken.md" in e for e in all_errors))
+
     def test_project_memory_directory_is_outside_default_audit(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

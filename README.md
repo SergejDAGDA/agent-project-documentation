@@ -307,6 +307,32 @@ Known legacy or project-specific names can be supplied with repeated `--marker` 
 
 These scripts assist the agent. They do not replace source inspection, factual verification, language-specific static analysis, secret scanning, or security review.
 
+## Where project documentation is stored
+
+For newly documented projects, the default maintained internal knowledge root
+is **`docs/project-knowledge/` inside that project's repository**. It keeps
+capability contracts, architecture, implementation and reusable knowledge
+together and separate from `docs/project-memory/` (current status, decisions,
+session log, handoff) and operational deployment records. A concise public
+`README.md` stays at repository root. Existing deliberate documentation
+layouts are preserved; no automatic directory migration is performed.
+
+Use `extract` to write reusable capability knowledge to
+`docs/project-knowledge/reusable/` by default. An external-only export is
+permitted when explicitly requested, but it is a **noncanonical snapshot**,
+not a replacement for durable project knowledge. Never silently store the
+only copy in an agent cache, visualization or temporary session directory.
+
+Validate all project-local Markdown links using
+`documentation_audit.py --root <project-root>`. For separately requested
+exports with custom top-level folders, use
+`documentation_audit.py --root <export-root> --all-markdown` to include
+every exported Markdown file. The audit checks Markdown links and basic
+structure, not deep semantic agreement with source code.
+
+The installed skill folder contains a `VERSION` file, which must match the
+plugin manifests. This enables local version checks without an updater.
+
 ## Design principles
 
 ### Evidence before prose
@@ -335,7 +361,9 @@ Reuse notes identify portable behavior, boundaries, assumptions, dependencies, a
 
 ## Status
 
-Version 0.2.3 clarifies external evidence provenance, separates verification confidence from temporal role, and prevents materially different repository, implementation, release/runtime, and documentation identities from being collapsed into one ambiguous current revision.
+Version 0.2.4 adds a project-local durable documentation default,
+installed-skill version marker, and explicit full-export link-audit scope.
+It preserves existing documentation trees instead of migrating them.
 
 ## License
 

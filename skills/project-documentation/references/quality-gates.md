@@ -50,6 +50,27 @@ Pass when every generated document has a meaningful repository-specific purpose.
 
 Fail when empty or irrelevant template documents are created.
 
+## Durable storage and export coverage
+
+Pass when maintained project documentation and reusable knowledge are
+stored in a canonical project-local documentation tree (by default
+`docs/project-knowledge/` in new projects), separate from
+`docs/project-memory/` coordination and deployment operational records. Preserve existing
+deliberate layouts; do not create duplicates just to follow a template.
+
+An explicit external-only or read-only export is allowed, but it must be
+identified as a noncanonical snapshot rather than silently replacing the
+project's durable documentation. Agent session caches, visualizations and
+temporary directories must never be represented as the project's
+permanent knowledge store.
+
+Pass when all generated Markdown documents were actually included in
+local-link checks, their relative links resolve in the delivered package,
+and the report gives the audit root and coverage. For out-of-tree exports
+with arbitrary top-level folder names, use `--all-markdown`. Fail when
+`0 errors` results from checking only the export README or when portable
+links rely on inaccessible machine-specific absolute paths.
+
 ## Navigation
 
 Pass when public documentation points to deeper material and internal documents have clear canonical locations.

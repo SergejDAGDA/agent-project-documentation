@@ -11,6 +11,9 @@ DIAGNOSTIC = REFERENCES / "diagnostic-output.md"
 PLUGIN = ROOT / "plugin.json"
 CLAUDE_PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
 CHANGELOG = ROOT / "CHANGELOG.md"
+VERSION_FILE = ROOT / "skills" / "project-documentation" / "VERSION"
+MODEL = REFERENCES / "documentation-model.md"
+GATES = REFERENCES / "quality-gates.md"
 README = ROOT / "README.md"
 README_RU = ROOT / "README.ru.md"
 
@@ -73,14 +76,27 @@ class SkillContractTests(unittest.TestCase):
         ):
             self.assertNotIn(project_specific_literal, text)
 
+    def test_default_project_knowledge_root_and_external_export_audit_contract(self):
+        skill = SKILL.read_text(encoding="utf-8")
+        model = MODEL.read_text(encoding="utf-8")
+        gates = GATES.read_text(encoding="utf-8")
+        for text in (skill, model, gates):
+            self.assertIn("docs/project-knowledge/", text)
+            self.assertIn("docs/project-memory/", text)
+        self.assertIn("--all-markdown", skill)
+        self.assertIn("noncanonical", skill)
+        self.assertIn("temporary", gates)
+        self.assertIn("reusable/", model)
+
     def test_release_version_metadata_is_consistent(self):
         plugin_version = json.loads(PLUGIN.read_text(encoding="utf-8"))["version"]
         claude_version = json.loads(CLAUDE_PLUGIN.read_text(encoding="utf-8"))["version"]
-        self.assertEqual(plugin_version, "0.2.3")
+        self.assertEqual(plugin_version, "0.2.4")
+        self.assertEqual(VERSION_FILE.read_text(encoding="utf-8").strip(), plugin_version)
         self.assertEqual(claude_version, plugin_version)
-        self.assertIn("## 0.2.3", CHANGELOG.read_text(encoding="utf-8"))
-        self.assertIn("Version 0.2.3", README.read_text(encoding="utf-8"))
-        self.assertIn("Версия 0.2.3", README_RU.read_text(encoding="utf-8"))
+        self.assertIn("## 0.2.4", CHANGELOG.read_text(encoding="utf-8"))
+        self.assertIn("Version 0.2.4", README.read_text(encoding="utf-8"))
+        self.assertIn("Версия 0.2.4", README_RU.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
